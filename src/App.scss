@@ -193,6 +193,14 @@ body {
   font-weight: 400;
 }
 
+.doc__content ul {
+  padding-left: 20px;
+}
+
+.doc__content li {
+  margin-bottom: 10px;
+}
+
 .doc__content a {
   color: var(--accent);
   text-decoration: underline;
