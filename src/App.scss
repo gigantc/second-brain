@@ -95,8 +95,8 @@ body {
 .doc-list__item {
   text-align: left;
   padding: 8px 10px;
-  background: #2e2e2e;
-  border: 1px solid var(--border);
+  background: none;
+  border: none;
   border-radius: 4px;
   color: var(--text);
   cursor: pointer;
@@ -108,8 +108,7 @@ body {
 }
 
 .doc-list__item:hover {
-  background: #343434;
-  border-color: var(--border);
+  background: #2a2a2a;
 }
 
 .doc-list__item:focus,
@@ -120,8 +119,8 @@ body {
 }
 
 .doc-list__item.is-active {
-  background: rgba(10, 149, 72, 0.18);
-  border-color: rgba(10, 149, 72, 0.5);
+  background: #2e2e2e;
+  border: none;
 }
 
 .doc-list__title {
