@@ -6,12 +6,12 @@ created: 2026-01-30
 ## Roadmap (ideas + checklist)
 
 ### Core UX
-- [ ] Clickable outline highlights current section while scrolling
-- [ ] Backlinks show snippet context (1–2 lines) under each link
+- [x] Clickable outline highlights current section while scrolling
+- [x] Backlinks show snippet context (1–2 lines) under each link
 - [x] Search: show results count
-- [ ] Search: highlight matched terms
+- [x] Search: highlight matched terms
 - [ ] Keyboard shortcuts cheat sheet (press ?)
-- [ ] Improve empty states (helpful tips)
+- [x] Improve empty states (helpful tips)
 
 ### Daily Brief
 - [ ] Auto‑generate brief in app + send to Telegram

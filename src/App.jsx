@@ -141,6 +141,7 @@ export default function App() {
   const docs = useMemo(() => sortDocs(buildDocs(docModules)), [])
   const [query, setQuery] = useState('')
   const [activePath, setActivePath] = useState(docs[0]?.path)
+  const [activeHeadingId, setActiveHeadingId] = useState(null)
   const searchRef = useRef(null)
 
   const filtered = useMemo(() => {
@@ -187,6 +188,31 @@ export default function App() {
       setActivePath(filtered[0].path)
     }
   }, [filtered, activePath])
+
+  useEffect(() => {
+    setActiveHeadingId(outline[0]?.id || null)
+  }, [activeDoc, outline])
+
+  useEffect(() => {
+    if (!activeDoc) return
+    const headings = Array.from(document.querySelectorAll('.doc__content h2[id], .doc__content h3[id]'))
+    if (!headings.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHeadingId(entry.target.id)
+          }
+        })
+      },
+      { root: null, rootMargin: '0px 0px -60% 0px', threshold: 0.1 }
+    )
+
+    headings.forEach((heading) => observer.observe(heading))
+
+    return () => observer.disconnect()
+  }, [activeDoc])
 
   useEffect(() => {
     const onKey = (event) => {
@@ -328,7 +354,9 @@ export default function App() {
               outline.map((item, index) => (
                 <button
                   key={`${item.text}-${index}`}
-                  className={`rightbar__outline rightbar__item--indent-${item.level}`}
+                  className={`rightbar__outline rightbar__item--indent-${item.level} ${
+                    activeHeadingId === item.id ? 'is-active' : ''
+                  }`}
                   onClick={() => {
                     const el = document.getElementById(item.id)
                     if (el) {

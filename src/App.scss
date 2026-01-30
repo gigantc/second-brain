@@ -358,6 +358,10 @@ body {
   background: #2a2a2a;
 }
 
+.rightbar__outline.is-active {
+  background: rgba(10, 149, 72, 0.2);
+}
+
 .rightbar__outline:focus,
 .rightbar__outline:focus-visible {
   outline: none;
