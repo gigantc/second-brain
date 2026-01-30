@@ -233,6 +233,13 @@ body {
   color: var(--muted);
 }
 
+.highlight {
+  background: rgba(10, 149, 72, 0.2);
+  color: var(--text);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
 .doc__content code {
   background: #1a1a1a;
   border: 1px solid var(--border);
@@ -294,12 +301,16 @@ body {
   padding-left: 16px;
 }
 
+.rightbar__backlink {
+  margin-bottom: 10px;
+}
+
 .rightbar__link {
   display: block;
   width: 100%;
   text-align: left;
   padding: 6px 8px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   background: none;
   border: none;
   border-radius: 4px;
@@ -308,6 +319,13 @@ body {
   transition: 0.15s ease;
   outline: none;
   font-weight: 300;
+}
+
+.rightbar__snippet {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 0 8px;
 }
 
 .rightbar__link:hover {

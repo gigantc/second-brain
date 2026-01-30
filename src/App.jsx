@@ -45,6 +45,39 @@ function slugify(text) {
     .replace(/\s+/g, '-')
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function highlightText(text, query) {
+  if (!query) return text
+  const safeQuery = escapeRegExp(query)
+  if (!safeQuery) return text
+  const regex = new RegExp(`(${safeQuery})`, 'ig')
+  const parts = String(text).split(regex)
+  return parts.map((part, index) =>
+    index % 2 === 1 ? (
+      <mark key={`${part}-${index}`} className="highlight">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  )
+}
+
+function buildSnippet(content, needle, maxLen = 120) {
+  if (!needle) return ''
+  const clean = content.replace(/\s+/g, ' ').trim()
+  const lower = clean.toLowerCase()
+  const index = lower.indexOf(needle.toLowerCase())
+  if (index === -1) return clean.slice(0, maxLen).trim()
+  const start = Math.max(0, index - 40)
+  const end = Math.min(clean.length, index + needle.length + 60)
+  const snippet = clean.slice(start, end).trim()
+  return `${start > 0 ? '…' : ''}${snippet}${end < clean.length ? '…' : ''}`
+}
+
 function renderMarkdownWithOutline(content) {
   const renderer = new marked.Renderer()
   const outline = []
@@ -133,6 +166,15 @@ export default function App() {
     })
   }, [docs, activeDoc])
 
+  const snippetMap = useMemo(() => {
+    if (!activeDoc?.title) return new Map()
+    const map = new Map()
+    backlinks.forEach((doc) => {
+      map.set(doc.path, buildSnippet(doc.content, activeDoc.title))
+    })
+    return map
+  }, [backlinks, activeDoc])
+
   const docStats = useMemo(() => {
     if (!activeDoc) return { words: 0, minutes: 0 }
     const words = activeDoc.content.split(/\s+/).filter(Boolean).length
@@ -213,9 +255,11 @@ export default function App() {
                   className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
                   onClick={() => setActivePath(doc.path)}
                 >
-                  <div className="doc-list__title">{doc.title}</div>
+                  <div className="doc-list__title">
+                    {highlightText(doc.title, query)}
+                  </div>
                   <div className="doc-list__meta">
-                    {doc.created ? doc.created : doc.slug}
+                    {highlightText(doc.created ? doc.created : doc.slug, query)}
                   </div>
                 </button>
               ))}
@@ -231,9 +275,11 @@ export default function App() {
                   className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
                   onClick={() => setActivePath(doc.path)}
                 >
-                  <div className="doc-list__title">{doc.title}</div>
+                  <div className="doc-list__title">
+                    {highlightText(doc.title, query)}
+                  </div>
                   <div className="doc-list__meta">
-                    {doc.created ? doc.created : doc.slug}
+                    {highlightText(doc.created ? doc.created : doc.slug, query)}
                   </div>
                 </button>
               ))}
@@ -241,7 +287,9 @@ export default function App() {
           )}
 
           {filtered.length === 0 && (
-            <div className="doc-list__empty">No docs match that search.</div>
+            <div className="doc-list__empty">
+              No docs match that search. Try clearing the filter or use fewer words.
+            </div>
           )}
         </div>
       </aside>
@@ -266,7 +314,9 @@ export default function App() {
             />
           </article>
         ) : (
-          <div className="empty">No document selected.</div>
+          <div className="empty">
+            Select a note from the left to get started.
+          </div>
         )}
       </main>
 
@@ -303,13 +353,17 @@ export default function App() {
             <div className="rightbar__title">Backlinks</div>
             {backlinks.length ? (
               backlinks.map((doc) => (
-                <button
-                  key={doc.path}
-                  className="rightbar__link"
-                  onClick={() => setActivePath(doc.path)}
-                >
-                  {doc.title}
-                </button>
+                <div key={doc.path} className="rightbar__backlink">
+                  <button
+                    className="rightbar__link"
+                    onClick={() => setActivePath(doc.path)}
+                  >
+                    {doc.title}
+                  </button>
+                  <div className="rightbar__snippet">
+                    {snippetMap.get(doc.path)}
+                  </div>
+                </div>
               ))
             ) : (
               <div className="rightbar__item">No backlinks found.</div>
