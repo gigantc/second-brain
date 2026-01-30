@@ -102,6 +102,9 @@ body {
   cursor: pointer;
   transition: 0.15s ease;
   outline: none;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .doc-list__item:hover {
@@ -110,8 +113,10 @@ body {
 }
 
 .doc-list__item:focus,
-.doc-list__item:focus-visible {
+.doc-list__item:focus-visible,
+.doc-list__item:active {
   outline: none;
+  box-shadow: none;
 }
 
 .doc-list__item.is-active {
