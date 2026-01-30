@@ -17,14 +17,14 @@ created: 2026-01-30
 - [ ] Auto‑generate brief in app + send to Telegram
 - [ ] 30‑day deltas for markets + crypto (already asked)
 - [x] More compact link labels + source styling
-- [ ] Add “Yesterday vs Today” brief compare view
+- [x] Add “Yesterday vs Today” brief compare view
 - [x] Brief archive index page
 
 ### Data / Content
 - [x] Tag extraction from markdown (#tags)
 - [x] Add “related docs” based on tags
 - [x] Word count + reading time
-- [ ] Show last updated timestamp
+- [x] Show last updated timestamp
 
 ### Sync / Access
 - [ ] Publish to external server (so you can view outside VM)

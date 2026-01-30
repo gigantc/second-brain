@@ -93,6 +93,25 @@ function buildSnippet(content, needle, maxLen = 120) {
   return `${start > 0 ? '…' : ''}${snippet}${end < clean.length ? '…' : ''}`
 }
 
+function parseBriefMarkets(content) {
+  const lines = content.split('\n')
+  const keys = ['S&P 500', 'Nasdaq', 'Dow', 'BTC', 'ETH']
+  const results = {}
+  lines.forEach((line) => {
+    keys.forEach((key) => {
+      if (line.includes(`**${key}**`)) {
+        results[key] = line.replace(/^-\s*/, '').trim()
+      }
+    })
+  })
+  return results
+}
+
+function getBriefDateFromPath(path) {
+  const match = path.match(/(\d{4}-\d{2}-\d{2})-brief\.md$/)
+  return match ? match[1] : null
+}
+
 function renderMarkdownWithOutline(content) {
   const renderer = new marked.Renderer()
   const outline = []
@@ -126,6 +145,7 @@ function buildDocs(modules) {
       .replace(/\//g, ' / ')
     const title = data?.title || slug
     const created = data?.created || null
+    const updated = data?.updated || null
     const isJournal = path.includes('/docs/journal/')
     const { html, outline } = renderMarkdownWithOutline(content)
 
@@ -138,6 +158,7 @@ function buildDocs(modules) {
       slug,
       title,
       created,
+      updated,
       content,
       html,
       outline,
@@ -215,6 +236,28 @@ export default function App() {
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
+  }, [docs, activeDoc])
+
+  const briefCompare = useMemo(() => {
+    if (!activeDoc?.path?.includes('/docs/briefs/')) return null
+    if (activeDoc.path.endsWith('README.md')) return null
+    const briefDocs = docs
+      .map((doc) => ({ doc, date: getBriefDateFromPath(doc.path) }))
+      .filter((item) => item.date)
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    const index = briefDocs.findIndex((item) => item.doc.path === activeDoc.path)
+    if (index <= 0) return null
+
+    const today = briefDocs[index].doc
+    const yesterday = briefDocs[index - 1].doc
+
+    return {
+      today,
+      yesterday,
+      todayMarkets: parseBriefMarkets(today.content),
+      yesterdayMarkets: parseBriefMarkets(yesterday.content),
+    }
   }, [docs, activeDoc])
 
   useEffect(() => {
@@ -429,7 +472,29 @@ export default function App() {
             <div className="rightbar__title">Metadata</div>
             <div className="rightbar__item">Words: {docStats.words}</div>
             <div className="rightbar__item">Reading time: {docStats.minutes} min</div>
+            <div className="rightbar__item">
+              Last updated: {activeDoc?.updated || activeDoc?.created || '—'}
+            </div>
           </div>
+
+          {briefCompare && (
+            <div className="rightbar__section">
+              <div className="rightbar__title">Yesterday vs Today</div>
+              <div className="rightbar__item">
+                Today: {getBriefDateFromPath(briefCompare.today.path)}
+              </div>
+              <div className="rightbar__item">
+                Yesterday: {getBriefDateFromPath(briefCompare.yesterday.path)}
+              </div>
+              {['S&P 500', 'Nasdaq', 'Dow', 'BTC', 'ETH'].map((key) => (
+                <div key={key} className="rightbar__snippet">
+                  <strong>{key}:</strong>{' '}
+                  {briefCompare.yesterdayMarkets[key] || '—'} →{' '}
+                  {briefCompare.todayMarkets[key] || '—'}
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="rightbar__section">
             <div className="rightbar__title">Related</div>
