@@ -195,6 +195,11 @@ body {
 
 .doc__content a {
   color: var(--accent);
+  text-decoration: underline;
+}
+
+.doc__content a:hover {
+  opacity: 0.85;
 }
 
 .doc__content code {
