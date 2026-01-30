@@ -13,6 +13,11 @@
   box-sizing: border-box;
 }
 
+*::selection {
+  background: rgba(10, 149, 72, 0.35);
+  color: var(--text);
+}
+
 body {
   margin: 0;
   font-family: "Roboto", "Inter", system-ui, -apple-system, sans-serif;
@@ -64,6 +69,13 @@ body {
   border: 1px solid var(--border);
   background: var(--panel-2);
   color: var(--text);
+  outline: none;
+  box-shadow: none;
+}
+
+.search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(10, 149, 72, 0.5);
 }
 
 .search__hint {
