@@ -133,6 +133,13 @@ export default function App() {
     })
   }, [docs, activeDoc])
 
+  const docStats = useMemo(() => {
+    if (!activeDoc) return { words: 0, minutes: 0 }
+    const words = activeDoc.content.split(/\s+/).filter(Boolean).length
+    const minutes = Math.max(1, Math.round(words / 200))
+    return { words, minutes }
+  }, [activeDoc])
+
   useEffect(() => {
     if (filtered.length && !filtered.find((doc) => doc.path === activePath)) {
       setActivePath(filtered[0].path)
@@ -191,7 +198,9 @@ export default function App() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <div className="search__hint">Press / to search</div>
+          <div className="search__hint">
+            Press / to search · Showing {filtered.length} of {docs.length}
+          </div>
         </div>
 
         <div className="doc-list">
@@ -284,6 +293,12 @@ export default function App() {
               <div className="rightbar__item">No headings found.</div>
             )}
           </div>
+          <div className="rightbar__section">
+            <div className="rightbar__title">Metadata</div>
+            <div className="rightbar__item">Words: {docStats.words}</div>
+            <div className="rightbar__item">Reading time: {docStats.minutes} min</div>
+          </div>
+
           <div className="rightbar__section">
             <div className="rightbar__title">Backlinks</div>
             {backlinks.length ? (

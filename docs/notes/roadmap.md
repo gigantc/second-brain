@@ -8,26 +8,27 @@ created: 2026-01-30
 ### Core UX
 - [ ] Clickable outline highlights current section while scrolling
 - [ ] Backlinks show snippet context (1–2 lines) under each link
-- [ ] Search: show results count + highlight matched terms
+- [x] Search: show results count
+- [ ] Search: highlight matched terms
 - [ ] Keyboard shortcuts cheat sheet (press ?)
 - [ ] Improve empty states (helpful tips)
 
 ### Daily Brief
 - [ ] Auto‑generate brief in app + send to Telegram
 - [ ] 30‑day deltas for markets + crypto (already asked)
-- [ ] More compact link labels + source styling (done)
+- [x] More compact link labels + source styling
 - [ ] Add “Yesterday vs Today” brief compare view
 - [ ] Brief archive index page
 
 ### Data / Content
 - [ ] Tag extraction from markdown (#tags)
 - [ ] Add “related docs” based on tags
-- [ ] Word count + reading time
+- [x] Word count + reading time
 - [ ] Show last updated timestamp
 
 ### Sync / Access
 - [ ] Publish to external server (so you can view outside VM)
-- [ ] Push repo to GitHub
+- [x] Push repo to GitHub
 - [ ] Git sync button / auto‑pull‑push
 
 ### Quality / Polish
