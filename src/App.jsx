@@ -50,7 +50,10 @@ function renderMarkdownWithOutline(content) {
   const outline = []
   const counts = {}
 
-  renderer.heading = (text, level) => {
+  renderer.heading = (token) => {
+    const level = token.depth ?? token.level
+    const text = token.text ?? ''
+
     if (level < 2 || level > 3) {
       return `<h${level}>${text}</h${level}>`
     }
