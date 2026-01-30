@@ -1,12 +1,12 @@
 :root {
   color-scheme: dark;
-  --bg: #0b0d10;
-  --panel: #12151b;
-  --panel-2: #151a22;
-  --border: #1e2633;
-  --text: #e8edf3;
-  --muted: #9aa6b2;
-  --accent: #8aa2ff;
+  --bg: #1f1f1f;
+  --panel: #242424;
+  --panel-2: #2a2a2a;
+  --border: #30363d;
+  --text: #e6e6e6;
+  --muted: #b3b3b3;
+  --accent: #0a9548;
 }
 
 * {
@@ -22,27 +22,27 @@ body {
 
 .app {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 280px 1fr 280px;
   min-height: 100vh;
 }
 
 .sidebar {
   background: var(--panel);
   border-right: 1px solid var(--border);
-  padding: 24px 20px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .brand__title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .brand__subtitle {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .search {
@@ -53,22 +53,22 @@ body {
 
 .search input {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--panel-2);
   color: var(--text);
 }
 
 .search__hint {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--muted);
 }
 
 .doc-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -76,11 +76,11 @@ body {
 .doc-list__section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .doc-list__heading {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--muted);
@@ -89,10 +89,10 @@ body {
 
 .doc-list__item {
   text-align: left;
-  padding: 12px;
+  padding: 8px 10px;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--text);
   cursor: pointer;
   transition: 0.15s ease;
@@ -104,18 +104,18 @@ body {
 }
 
 .doc-list__item.is-active {
-  background: rgba(138, 162, 255, 0.1);
-  border-color: rgba(138, 162, 255, 0.45);
+  background: rgba(10, 149, 72, 0.18);
+  border-color: rgba(10, 149, 72, 0.5);
 }
 
 .doc-list__title {
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 .doc-list__meta {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 4px;
 }
 
@@ -125,7 +125,8 @@ body {
 }
 
 .viewer {
-  padding: 48px 64px;
+  padding: 32px 40px;
+  border-right: 1px solid var(--border);
 }
 
 .doc {
@@ -135,18 +136,19 @@ body {
 
 .doc__header h1 {
   margin: 0 0 8px;
-  font-size: 32px;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .doc__date {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   margin-bottom: 8px;
 }
 
 .doc__tags {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -154,20 +156,21 @@ body {
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 
 .doc__content {
-  margin-top: 24px;
-  line-height: 1.7;
+  margin-top: 20px;
+  line-height: 1.6;
   color: var(--text);
+  font-size: 14px;
 }
 
 .doc__content h2,
 .doc__content h3 {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 .doc__content a {
@@ -175,22 +178,53 @@ body {
 }
 
 .doc__content code {
-  background: #0f131a;
+  background: #1a1a1a;
   border: 1px solid var(--border);
   padding: 2px 6px;
   border-radius: 6px;
 }
 
 .doc__content pre {
-  background: #0f131a;
-  padding: 16px;
-  border-radius: 12px;
+  background: #1a1a1a;
+  padding: 14px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   overflow: auto;
 }
 
 .empty {
   color: var(--muted);
+}
+
+.rightbar {
+  background: var(--panel);
+  padding: 20px 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.rightbar__section {
+  margin-bottom: 18px;
+}
+
+.rightbar__title {
+  color: var(--text);
+  font-size: 12px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.rightbar__item {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 1100px) {
+  .app {
+    grid-template-columns: 280px 1fr;
+  }
+  .rightbar {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -203,6 +237,6 @@ body {
     z-index: 2;
   }
   .viewer {
-    padding: 32px 24px;
+    padding: 24px 20px;
   }
 }

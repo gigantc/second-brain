@@ -214,6 +214,17 @@ export default function App() {
           <div className="empty">No document selected.</div>
         )}
       </main>
+
+      <aside className="rightbar">
+        <div className="rightbar__section">
+          <div className="rightbar__title">Linked mentions</div>
+          <div className="rightbar__item">No backlinks found.</div>
+        </div>
+        <div className="rightbar__section">
+          <div className="rightbar__title">Unlinked mentions</div>
+          <div className="rightbar__item">—</div>
+        </div>
+      </aside>
     </div>
   )
 }
