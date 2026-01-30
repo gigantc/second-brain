@@ -38,7 +38,7 @@ function parseFrontMatter(raw) {
 }
 
 function slugify(text) {
-  return text
+  return String(text ?? '')
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
     .trim()
