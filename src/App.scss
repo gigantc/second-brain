@@ -33,6 +33,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
 }
 
 .brand__title {
@@ -71,6 +75,7 @@ body {
   gap: 12px;
   overflow-y: auto;
   padding-right: 4px;
+  flex: 1;
 }
 
 .doc-list__section {
@@ -232,9 +237,8 @@ body {
     grid-template-columns: 1fr;
   }
   .sidebar {
-    position: sticky;
-    top: 0;
-    z-index: 2;
+    position: static;
+    height: auto;
   }
   .viewer {
     padding: 24px 20px;
