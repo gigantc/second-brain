@@ -45,6 +45,12 @@ body {
   font-size: 13px;
 }
 
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .search input {
   width: 100%;
   padding: 10px 12px;
@@ -54,12 +60,31 @@ body {
   color: var(--text);
 }
 
+.search__hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 .doc-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow-y: auto;
   padding-right: 4px;
+}
+
+.doc-list__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doc-list__heading {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  padding: 0 4px;
 }
 
 .doc-list__item {
