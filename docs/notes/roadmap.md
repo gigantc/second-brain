@@ -27,9 +27,13 @@ created: 2026-01-30
 - [x] Show last updated timestamp
 
 ### Sync / Access
-- [ ] Publish to external server (so you can view outside VM)
+- [ ] Publish to external server (Netlify)
 - [x] Push repo to GitHub
 - [ ] Git sync button / auto‑pull‑push
+
+### Integrations
+- [ ] Add Claude API key to Clawdbot
+- [ ] Add Gemini API key to Clawdbot
 
 ### Quality / Polish
 - [ ] Light mode toggle (optional)
