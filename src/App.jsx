@@ -1,8 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { marked } from 'marked'
+import { gsap } from 'gsap'
 import './App.scss'
+import {
+  auth,
+  db,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from './firebase'
 
-const docModules = import.meta.glob('../docs/**/*.md', { as: 'raw', eager: true })
+const docModules = import.meta.glob('../docs/**/*.md', { query: '?raw', import: 'default', eager: true })
 
 function parseFrontMatter(raw) {
   if (!raw.startsWith('---')) {
@@ -112,6 +130,13 @@ function getBriefDateFromPath(path) {
   return match ? match[1] : null
 }
 
+function formatDate(value) {
+  if (!value) return null
+  const date = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(date.getTime())) return null
+  return date.toISOString().slice(0, 10)
+}
+
 function renderMarkdownWithOutline(content) {
   const renderer = new marked.Renderer()
   const outline = []
@@ -147,6 +172,7 @@ function buildDocs(modules) {
     const created = data?.created || null
     const updated = data?.updated || null
     const isJournal = path.includes('/docs/journal/')
+    const isBrief = path.includes('/docs/briefs/') && !path.endsWith('/docs/briefs/README.md')
     const { html, outline } = renderMarkdownWithOutline(content)
 
     const frontMatterTags = Array.isArray(data?.tags) ? data.tags : []
@@ -164,26 +190,180 @@ function buildDocs(modules) {
       outline,
       tags,
       isJournal,
+      isBrief,
     }
   })
 }
 
 function sortDocs(docs) {
   return [...docs].sort((a, b) => {
-    if (a.created && b.created) return String(b.created).localeCompare(String(a.created))
-    if (a.created) return -1
-    if (b.created) return 1
+    const aDate = a.updated || a.created
+    const bDate = b.updated || b.created
+    if (aDate && bDate) return String(bDate).localeCompare(String(aDate))
+    if (aDate) return -1
+    if (bDate) return 1
     return a.title.localeCompare(b.title)
   })
 }
 
 export default function App() {
-  const docs = useMemo(() => sortDocs(buildDocs(docModules)), [])
+  const localDocs = useMemo(() => sortDocs(buildDocs(docModules)), [])
+  const [firestoreDocs, setFirestoreDocs] = useState([])
+  const docs = useMemo(() => sortDocs([...localDocs, ...firestoreDocs]), [localDocs, firestoreDocs])
   const [query, setQuery] = useState('')
   const [activePath, setActivePath] = useState(docs[0]?.path)
   const [activeHeadingId, setActiveHeadingId] = useState(null)
   const [showShortcuts, setShowShortcuts] = useState(false)
+  const [openSections, setOpenSections] = useState({ notes: true, journal: true, briefs: true })
+  const [user, setUser] = useState(null)
+  const [authEmail, setAuthEmail] = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [showEditor, setShowEditor] = useState(false)
+  const [editorId, setEditorId] = useState(null)
+  const [editorTitle, setEditorTitle] = useState('')
+  const [editorContent, setEditorContent] = useState('')
+  const [editorTags, setEditorTags] = useState('')
+  const [editorSaving, setEditorSaving] = useState(false)
+  const notesRef = useRef(null)
+  const journalRef = useRef(null)
+  const briefsRef = useRef(null)
   const searchRef = useRef(null)
+
+  useEffect(() => onAuthStateChanged(auth, (nextUser) => {
+    setUser(nextUser)
+    if (!nextUser) setAuthError('')
+  }), [])
+
+  useEffect(() => {
+    if (!user) {
+      setFirestoreDocs([])
+      return undefined
+    }
+
+    const notesQuery = query(collection(db, 'notes'), orderBy('updatedAt', 'desc'))
+    return onSnapshot(notesQuery, (snapshot) => {
+      const nextDocs = snapshot.docs.map((snap) => {
+        const data = snap.data() || {}
+        const content = data.content || ''
+        const title = data.title || 'Untitled'
+        const created = formatDate(data.createdAt?.toDate?.() || data.createdAt)
+        const updated = formatDate(data.updatedAt?.toDate?.() || data.updatedAt)
+        const { html, outline } = renderMarkdownWithOutline(content)
+        const frontTags = Array.isArray(data.tags) ? data.tags : []
+        const inlineTags = extractInlineTags(content)
+        const tags = uniqueTags([...frontTags, ...inlineTags])
+
+        return {
+          path: `firestore:notes/${snap.id}`,
+          slug: `notes / ${title}`,
+          title,
+          created,
+          updated,
+          content,
+          html,
+          outline,
+          tags,
+          rawTags: frontTags,
+          isJournal: false,
+          isBrief: false,
+          source: 'firestore',
+          id: snap.id,
+        }
+      })
+      setFirestoreDocs(nextDocs)
+    })
+  }, [user])
+
+  useEffect(() => {
+    if (!docs.length) return
+    if (!docs.find((doc) => doc.path === activePath)) {
+      setActivePath(docs[0]?.path)
+    }
+  }, [docs, activePath])
+
+  const handleSignIn = async () => {
+    setAuthError('')
+    try {
+      await signInWithEmailAndPassword(auth, authEmail.trim(), authPassword)
+    } catch (error) {
+      setAuthError(error.message)
+    }
+  }
+
+  const handleSignUp = async () => {
+    setAuthError('')
+    try {
+      await createUserWithEmailAndPassword(auth, authEmail.trim(), authPassword)
+    } catch (error) {
+      setAuthError(error.message)
+    }
+  }
+
+  const handleSignOut = async () => {
+    await signOut(auth)
+  }
+
+  const openEditor = (docItem) => {
+    if (!user) return
+    if (docItem?.source === 'firestore') {
+      setEditorId(docItem.id)
+      setEditorTitle(docItem.title)
+      setEditorContent(docItem.content)
+      setEditorTags((docItem.rawTags || docItem.tags || []).join(', '))
+    } else {
+      setEditorId(null)
+      setEditorTitle('')
+      setEditorContent('')
+      setEditorTags('')
+    }
+    setShowEditor(true)
+  }
+
+  const handleSaveNote = async () => {
+    if (!user) return
+    setEditorSaving(true)
+    const tags = editorTags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean)
+
+    try {
+      if (editorId) {
+        await updateDoc(doc(db, 'notes', editorId), {
+          title: editorTitle.trim() || 'Untitled',
+          content: editorContent,
+          tags,
+          updatedAt: serverTimestamp(),
+        })
+      } else {
+        await addDoc(collection(db, 'notes'), {
+          title: editorTitle.trim() || 'Untitled',
+          content: editorContent,
+          tags,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        })
+      }
+      setShowEditor(false)
+      setEditorId(null)
+      setEditorTitle('')
+      setEditorContent('')
+      setEditorTags('')
+    } finally {
+      setEditorSaving(false)
+    }
+  }
+
+  const handleDeleteNote = async () => {
+    if (!editorId) return
+    await deleteDoc(doc(db, 'notes', editorId))
+    setShowEditor(false)
+    setEditorId(null)
+    setEditorTitle('')
+    setEditorContent('')
+    setEditorTags('')
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -222,6 +402,21 @@ export default function App() {
     const words = activeDoc.content.split(/\s+/).filter(Boolean).length
     const minutes = Math.max(1, Math.round(words / 200))
     return { words, minutes }
+  }, [activeDoc])
+
+  const briefGreeting = useMemo(() => {
+    if (!activeDoc?.isBrief) return null
+    const dateStr = activeDoc.created || ''
+    const date = dateStr ? new Date(`${dateStr}T00:00:00`) : new Date()
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
+    const variants = [
+      `Good morning, dFree — Happy ${weekday}.`,
+      `Rise and shine, dFree. Happy ${weekday}!`,
+      `Morning, dFree. Let’s win this ${weekday}.`,
+      `Hey dFree — fresh ${weekday}, fresh brief.`,
+    ]
+    const index = date.getDate() % variants.length
+    return variants[index]
   }, [activeDoc])
 
   const relatedDocs = useMemo(() => {
@@ -329,14 +524,78 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [filtered, activePath, showShortcuts])
 
+  useEffect(() => {
+    const sections = [
+      { key: 'notes', ref: notesRef },
+      { key: 'journal', ref: journalRef },
+      { key: 'briefs', ref: briefsRef },
+    ]
+
+    sections.forEach(({ key, ref }) => {
+      const el = ref.current
+      if (!el) return
+      if (openSections[key]) {
+        gsap.to(el, { height: 'auto', opacity: 1, duration: 0.2, ease: 'power1.out' })
+      } else {
+        gsap.to(el, { height: 0, opacity: 0, duration: 0.2, ease: 'power1.in' })
+      }
+    })
+  }, [openSections])
+
   const grouped = useMemo(() => {
     const journals = filtered.filter((doc) => doc.isJournal)
-    const notes = filtered.filter((doc) => !doc.isJournal)
-    return { journals, notes }
+    const briefs = filtered.filter((doc) => doc.isBrief)
+    const notes = filtered.filter((doc) => !doc.isJournal && !doc.isBrief)
+    return { journals, briefs, notes }
   }, [filtered])
 
   return (
     <div className="app">
+      {showEditor && (
+        <div className="modal__backdrop" onClick={() => setShowEditor(false)}>
+          <div className="modal modal--editor" onClick={(event) => event.stopPropagation()}>
+            <div className="modal__title">{editorId ? 'Edit Note' : 'New Note'}</div>
+            <label className="modal__label">Title</label>
+            <input
+              className="modal__input"
+              type="text"
+              placeholder="Untitled"
+              value={editorTitle}
+              onChange={(event) => setEditorTitle(event.target.value)}
+            />
+            <label className="modal__label">Tags (comma separated)</label>
+            <input
+              className="modal__input"
+              type="text"
+              placeholder="ideas, docky"
+              value={editorTags}
+              onChange={(event) => setEditorTags(event.target.value)}
+            />
+            <label className="modal__label">Content</label>
+            <textarea
+              className="modal__textarea"
+              rows={12}
+              value={editorContent}
+              onChange={(event) => setEditorContent(event.target.value)}
+              placeholder="Write your note in markdown..."
+            />
+            <div className="modal__actions">
+              {editorId && (
+                <button className="modal__button modal__button--danger" onClick={handleDeleteNote}>
+                  Delete
+                </button>
+              )}
+              <button className="modal__button modal__button--ghost" onClick={() => setShowEditor(false)}>
+                Cancel
+              </button>
+              <button className="modal__button" onClick={handleSaveNote} disabled={editorSaving}>
+                {editorSaving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showShortcuts && (
         <div className="modal__backdrop" onClick={() => setShowShortcuts(false)}>
           <div className="modal" onClick={(event) => event.stopPropagation()}>
@@ -351,9 +610,49 @@ export default function App() {
 
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand__title">Second Brain</div>
-          <div className="brand__subtitle">dFree × Rocky</div>
+          <div className="brand__title">Docky</div>
+          <div className="brand__subtitle">The Dock · dFree × Rocky</div>
         </div>
+
+        <div className="auth">
+          {user ? (
+            <div className="auth__signed-in">
+              <div className="auth__label">Signed in as</div>
+              <div className="auth__value">{user.email}</div>
+              <button className="auth__button auth__button--ghost" onClick={handleSignOut}>
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <>
+              <input
+                className="auth__input"
+                type="email"
+                placeholder="Email"
+                value={authEmail}
+                onChange={(event) => setAuthEmail(event.target.value)}
+              />
+              <input
+                className="auth__input"
+                type="password"
+                placeholder="Password"
+                value={authPassword}
+                onChange={(event) => setAuthPassword(event.target.value)}
+              />
+              <div className="auth__actions">
+                <button className="auth__button" onClick={handleSignIn}>Sign in</button>
+                <button className="auth__button auth__button--ghost" onClick={handleSignUp}>Sign up</button>
+              </div>
+              {authError && <div className="auth__error">{authError}</div>}
+            </>
+          )}
+        </div>
+
+        {user && (
+          <button className="primary-button" onClick={() => openEditor()}>
+            New Note
+          </button>
+        )}
 
         <div className="search">
           <input
@@ -371,41 +670,100 @@ export default function App() {
         <div className="doc-list">
           {grouped.notes.length > 0 && (
             <div className="doc-list__section">
-              <div className="doc-list__heading">Notes</div>
-              {grouped.notes.map((doc) => (
-                <button
-                  key={doc.path}
-                  className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
-                  onClick={() => setActivePath(doc.path)}
-                >
-                  <div className="doc-list__title">
-                    {highlightText(doc.title, query)}
-                  </div>
-                  <div className="doc-list__meta">
-                    {highlightText(doc.created ? doc.created : doc.slug, query)}
-                  </div>
-                </button>
-              ))}
+              <button
+                className="doc-list__heading doc-list__heading--toggle"
+                onClick={() =>
+                  setOpenSections((prev) => ({ ...prev, notes: !prev.notes }))
+                }
+                aria-expanded={openSections.notes}
+              >
+                <span>Notes</span>
+                <span className={`doc-list__chevron ${openSections.notes ? 'is-open' : ''}`}>
+                  ▾
+                </span>
+              </button>
+              <div className="doc-list__content" ref={notesRef}>
+                {grouped.notes.map((doc) => (
+                  <button
+                    key={doc.path}
+                    className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
+                    onClick={() => setActivePath(doc.path)}
+                  >
+                    <div className="doc-list__title">
+                      {highlightText(doc.title, query)}
+                    </div>
+                    <div className="doc-list__meta">
+                      {highlightText(doc.updated || doc.created || doc.slug, query)}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {grouped.journals.length > 0 && (
             <div className="doc-list__section">
-              <div className="doc-list__heading">Journal</div>
-              {grouped.journals.map((doc) => (
-                <button
-                  key={doc.path}
-                  className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
-                  onClick={() => setActivePath(doc.path)}
-                >
-                  <div className="doc-list__title">
-                    {highlightText(doc.title, query)}
-                  </div>
-                  <div className="doc-list__meta">
-                    {highlightText(doc.created ? doc.created : doc.slug, query)}
-                  </div>
-                </button>
-              ))}
+              <button
+                className="doc-list__heading doc-list__heading--toggle"
+                onClick={() =>
+                  setOpenSections((prev) => ({ ...prev, journal: !prev.journal }))
+                }
+                aria-expanded={openSections.journal}
+              >
+                <span>Journals</span>
+                <span className={`doc-list__chevron ${openSections.journal ? 'is-open' : ''}`}>
+                  ▾
+                </span>
+              </button>
+              <div className="doc-list__content" ref={journalRef}>
+                {grouped.journals.map((doc) => (
+                  <button
+                    key={doc.path}
+                    className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
+                    onClick={() => setActivePath(doc.path)}
+                  >
+                    <div className="doc-list__title">
+                      {highlightText(doc.title, query)}
+                    </div>
+                    <div className="doc-list__meta">
+                      {highlightText(doc.updated || doc.created || doc.slug, query)}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {grouped.briefs.length > 0 && (
+            <div className="doc-list__section">
+              <button
+                className="doc-list__heading doc-list__heading--toggle"
+                onClick={() =>
+                  setOpenSections((prev) => ({ ...prev, briefs: !prev.briefs }))
+                }
+                aria-expanded={openSections.briefs}
+              >
+                <span>Morning Briefs</span>
+                <span className={`doc-list__chevron ${openSections.briefs ? 'is-open' : ''}`}>
+                  ▾
+                </span>
+              </button>
+              <div className="doc-list__content" ref={briefsRef}>
+                {grouped.briefs.map((doc) => (
+                  <button
+                    key={doc.path}
+                    className={`doc-list__item ${doc.path === activeDoc?.path ? 'is-active' : ''}`}
+                    onClick={() => setActivePath(doc.path)}
+                  >
+                    <div className="doc-list__title">
+                      {highlightText(doc.title, query)}
+                    </div>
+                    <div className="doc-list__meta">
+                      {highlightText(doc.updated || doc.created || doc.slug, query)}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -421,13 +779,25 @@ export default function App() {
         {activeDoc ? (
           <article className="doc">
             <header className="doc__header">
-              <h1>{activeDoc.title}</h1>
-              {activeDoc.created && <div className="doc__date">{activeDoc.created}</div>}
+              <h1>{briefGreeting || activeDoc.title}</h1>
+              {activeDoc.isBrief && (
+                <div className="doc__date">{activeDoc.title}</div>
+              )}
+              {!activeDoc.isBrief && activeDoc.created && (
+                <div className="doc__date">{activeDoc.created}</div>
+              )}
               {activeDoc.tags.length > 0 && (
                 <div className="doc__tags">
                   {activeDoc.tags.map((tag) => (
                     <span key={tag} className="tag">{tag}</span>
                   ))}
+                </div>
+              )}
+              {user && activeDoc.source === 'firestore' && (
+                <div className="doc__actions">
+                  <button className="doc__button" onClick={() => openEditor(activeDoc)}>
+                    Edit Note
+                  </button>
                 </div>
               )}
             </header>
