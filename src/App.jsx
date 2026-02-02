@@ -13,7 +13,6 @@ import {
   addDoc,
   doc,
   updateDoc,
-  setDoc,
   deleteDoc,
   onSnapshot,
   orderBy,
@@ -138,25 +137,6 @@ function formatDate(value) {
   return date.toISOString().slice(0, 10)
 }
 
-function hashString(value) {
-  let hash = 0
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(i)
-    hash |= 0
-  }
-  return Math.abs(hash).toString(36)
-}
-
-function parseDocDate(value) {
-  if (!value) return null
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return new Date(`${value}T00:00:00`)
-  }
-  const parsed = new Date(value)
-  if (Number.isNaN(parsed.getTime())) return null
-  return parsed
-}
-
 function renderMarkdownWithOutline(content) {
   const renderer = new marked.Renderer()
   const outline = []
@@ -254,7 +234,6 @@ export default function App() {
   const [editorContent, setEditorContent] = useState('')
   const [editorTags, setEditorTags] = useState('')
   const [editorSaving, setEditorSaving] = useState(false)
-  const [importing, setImporting] = useState(false)
   const notesRef = useRef(null)
   const journalRef = useRef(null)
   const briefsRef = useRef(null)
@@ -399,38 +378,6 @@ export default function App() {
     setEditorTags('')
   }
 
-  const handleImportLocalDocs = async () => {
-    if (!user) return
-    setImporting(true)
-
-    const candidates = localDocs.filter((doc) => {
-      if (doc.path.endsWith('README.md')) return false
-      if (doc.path.includes('/docs/briefs/')) return true
-      if (doc.path.includes('/docs/journal/')) return true
-      if (doc.path.includes('/docs/notes/')) return true
-      return false
-    })
-
-    try {
-      for (const docItem of candidates) {
-        const type = docItem.isBrief ? 'brief' : docItem.isJournal ? 'journal' : 'note'
-        const sourcePath = docItem.path
-        const docId = `import-${hashString(sourcePath)}`
-        await setDoc(doc(db, 'notes', docId), {
-          title: docItem.title || 'Untitled',
-          content: docItem.content || '',
-          tags: docItem.tags || [],
-          type,
-          sourcePath,
-          createdAt: parseDocDate(docItem.created) || serverTimestamp(),
-          updatedAt: parseDocDate(docItem.updated) || parseDocDate(docItem.created) || serverTimestamp(),
-        })
-      }
-    } finally {
-      setImporting(false)
-    }
-  }
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return docs
@@ -556,7 +503,7 @@ export default function App() {
     const onKey = (event) => {
       if (event.key === '/') {
         event.preventDefault()
-        searchRef.current?.focus()
+        requestAnimationFrame(() => searchRef.current?.focus())
         return
       }
 
@@ -674,60 +621,62 @@ export default function App() {
         </div>
       )}
 
-      <aside className="sidebar">
+      <header className="app-header">
         <div className="brand">
           <div className="brand__title">Docky</div>
           <div className="brand__subtitle">The Dock · dFree × Rocky</div>
         </div>
 
-        <div className="auth">
-          {user ? (
-            <div className="auth__signed-in">
-              <div className="auth__label">Signed in as</div>
-              <div className="auth__value">{user.email}</div>
-              <button className="auth__button auth__button--ghost" onClick={handleSignOut}>
-                Sign out
-              </button>
-            </div>
-          ) : (
-            <>
-              <input
-                className="auth__input"
-                type="email"
-                placeholder="Email"
-                value={authEmail}
-                onChange={(event) => setAuthEmail(event.target.value)}
-              />
-              <input
-                className="auth__input"
-                type="password"
-                placeholder="Password"
-                value={authPassword}
-                onChange={(event) => setAuthPassword(event.target.value)}
-              />
-              <div className="auth__actions">
-                <button className="auth__button" onClick={handleSignIn}>Sign in</button>
-                <button className="auth__button auth__button--ghost" onClick={handleSignUp}>Sign up</button>
-              </div>
-              {authError && <div className="auth__error">{authError}</div>}
-            </>
+        <div className="app-header__actions">
+          {user && (
+            <button className="icon-button icon-button--primary" onClick={() => openEditor()} type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" />
+              </svg>
+              <span>New</span>
+            </button>
           )}
-        </div>
-
-        {user && (
-          <div className="sidebar__actions">
-            <button className="primary-button" onClick={() => openEditor()}>
-              New Note
-            </button>
-            <button className="primary-button primary-button--ghost" onClick={handleImportLocalDocs} disabled={importing}>
-              {importing ? 'Importing…' : 'Import local docs'}
-            </button>
+          <div className="auth">
+            {user ? (
+              <div className="auth__signed-in">
+                <div className="auth__label">Signed in as</div>
+                <div className="auth__value">{user.email}</div>
+                <button className="auth__button auth__button--ghost" onClick={handleSignOut}>
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  className="auth__input"
+                  type="email"
+                  placeholder="Email"
+                  value={authEmail}
+                  onChange={(event) => setAuthEmail(event.target.value)}
+                />
+                <input
+                  className="auth__input"
+                  type="password"
+                  placeholder="Password"
+                  value={authPassword}
+                  onChange={(event) => setAuthPassword(event.target.value)}
+                />
+                <div className="auth__actions">
+                  <button className="auth__button" onClick={handleSignIn}>Sign in</button>
+                  <button className="auth__button auth__button--ghost" onClick={handleSignUp}>Sign up</button>
+                </div>
+                {authError && <div className="auth__error">{authError}</div>}
+              </>
+            )}
           </div>
-        )}
+        </div>
+      </header>
 
-        <div className="search">
+      <aside className="sidebar">
+        <div className="sidebar__search search">
           <input
             ref={searchRef}
+            className="search__input"
             type="search"
             placeholder="Search docs..."
             value={query}
@@ -737,7 +686,6 @@ export default function App() {
             Press / to search · Showing {filtered.length} of {docs.length} · Press ? for help
           </div>
         </div>
-
         <div className="doc-list">
           {grouped.notes.length > 0 && (
             <div className="doc-list__section">
