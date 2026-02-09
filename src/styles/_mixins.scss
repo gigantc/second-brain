@@ -10,6 +10,49 @@
   padding: 0;
 }
 
+// M3 surface tinting — overlays $green-light at varying alpha on $black
+@mixin surface-tint($level) {
+  background-color: v.$black;
+
+  @if $level == 1 {
+    background-image: linear-gradient(rgba(v.$green-light, 0.05), rgba(v.$green-light, 0.05));
+  } @else if $level == 2 {
+    background-image: linear-gradient(rgba(v.$green-light, 0.08), rgba(v.$green-light, 0.08));
+  } @else if $level == 3 {
+    background-image: linear-gradient(rgba(v.$green-light, 0.11), rgba(v.$green-light, 0.11));
+  } @else if $level == 4 {
+    background-image: linear-gradient(rgba(v.$green-light, 0.14), rgba(v.$green-light, 0.14));
+  }
+}
+
+// M3 state layer — ::before overlay for hover/focus/active feedback
+@mixin state-layer {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: v.$white;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity v.$transition-fast;
+  }
+
+  &:hover::before {
+    opacity: 0.08;
+  }
+
+  &:focus-visible::before {
+    opacity: 0.12;
+  }
+
+  &:active::before {
+    opacity: 0.12;
+  }
+}
+
 @mixin focus-ring {
   &:focus,
   &:focus-visible {
@@ -18,18 +61,21 @@
   }
 }
 
+// M3 filled input style
 @mixin input-field {
   width: 100%;
   padding: 10px 12px;
-  border-radius: v.$radius-m;
-  border: 1px solid transparent;
-  background: v.$black;
+  border-radius: v.$radius-m v.$radius-m 0 0;
+  border: none;
+  border-bottom: 2px solid rgba(v.$white, 0.15);
+  background: rgba(v.$white, 0.06);
   color: v.$white;
+  font-size: v.$fs-base;
   outline: none;
-  box-shadow: inset 0 0 0 1px v.$black;
-  transition: box-shadow v.$transition-normal, border-color v.$transition-normal;
+  transition: border-color v.$transition-normal, background v.$transition-normal;
 
   &:focus {
-    box-shadow: v.$ring;
+    border-bottom-color: v.$green-light;
+    background: rgba(v.$white, 0.08);
   }
 }

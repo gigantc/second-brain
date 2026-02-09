@@ -1,8 +1,9 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .rightbar {
   grid-area: rightbar;
-  background: v.$black;
+  @include m.surface-tint(1);
   padding: 22px 18px;
   color: v.$muted;
   font-size: v.$fs-base;
@@ -21,8 +22,8 @@
   margin-bottom: 18px;
   padding: 14px;
   border-radius: v.$radius-m;
-  background: v.$black;
-  border: 1px solid rgba(v.$green, 0.12);
+  @include m.surface-tint(2);
+  border: 1px solid rgba(v.$white, 0.06);
 }
 
 .rightbar__title {
@@ -62,9 +63,10 @@
   transition: v.$transition-fast;
   outline: none;
   font-weight: v.$fw-medium;
+  @include m.state-layer;
 
   &:hover {
-    background: v.$black;
+    background: rgba(v.$white, 0.04);
   }
 
   &:focus,
@@ -100,13 +102,14 @@
   transition: v.$transition-fast;
   outline: none;
   font-weight: v.$fw-medium;
+  @include m.state-layer;
 
   &:hover {
-    background: v.$black;
+    background: rgba(v.$white, 0.04);
   }
 
   &.is-active {
-    background: rgba(v.$green, 0.25);
+    background: rgba(v.$green-light, 0.14);
   }
 
   &:focus,

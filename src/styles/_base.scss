@@ -17,20 +17,21 @@ body {
   margin: 0;
   font-family: v.$font-stack;
   font-weight: v.$fw-normal;
+  font-size: v.$fs-base;
   background: v.$gradient-bg, v.$black;
   color: v.$white;
 }
 
 .highlight {
-  background: rgba(v.$green, 0.2);
+  background: rgba(v.$green-light, 0.15);
   color: v.$white;
   padding: 0 3px;
   border-radius: 6px;
 }
 
 .tag {
-  background: v.$black;
-  border: 1px solid v.$black;
+  background: rgba(v.$white, 0.04);
+  border: 1px solid rgba(v.$white, 0.06);
   border-radius: v.$radius-pill;
   padding: 4px 10px;
   font-size: v.$fs-sm;

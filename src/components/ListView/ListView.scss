@@ -15,7 +15,7 @@
 
 .list__header h1 {
   margin: 0 0 6px;
-  font-size: 22px;
+  font-size: v.$fs-xl;
   font-weight: v.$fw-bold;
   letter-spacing: 0.01em;
 }
@@ -40,39 +40,47 @@
 }
 
 .list__title-input {
+  @include m.input-field;
   min-width: 240px;
-  padding: 8px 10px;
-  border-radius: v.$radius-m;
-  border: 1px solid transparent;
-  background: v.$black;
-  color: v.$white;
-  box-shadow: inset 0 0 0 1px v.$black;
 }
 
+// M3 outlined buttons
 .list__rename,
 .list__rename-save,
 .list__rename-cancel {
-  border: 1px solid v.$black;
+  border: 1px solid rgba(v.$white, 0.12);
   background: transparent;
   color: v.$white;
-  padding: 6px 12px;
+  padding: 10px 16px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
+  @include m.state-layer;
 
-  &:hover {
-    background: rgba(v.$white, 0.06);
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: v.$ring-soft;
   }
 }
 
+// M3 text button (cancel)
+.list__rename-cancel {
+  border: none;
+  color: v.$green-light;
+  padding: 10px 12px;
+}
+
+// M3 danger outlined button
 .list__delete {
   border: 1px solid rgba(v.$danger, 0.45);
   background: transparent;
   color: v.$danger;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
+  @include m.state-layer;
 
   &:hover {
     background: rgba(v.$danger, 0.12);
@@ -81,7 +89,7 @@
 
 .list__meta {
   color: v.$muted;
-  font-size: v.$fs-base;
+  font-size: v.$fs-sm;
 }
 
 .list__composer {
@@ -95,8 +103,9 @@
   @include m.input-field;
 }
 
+// M3 filled button (Add)
 .list__add-button {
-  padding: 10px 16px;
+  padding: 10px 24px;
   border-radius: v.$radius-pill;
   border: none;
   cursor: pointer;
@@ -105,6 +114,7 @@
   font-size: v.$fs-base;
   font-weight: v.$fw-bold;
   box-shadow: v.$elevation-1;
+  @include m.state-layer;
 
   &:disabled {
     opacity: 0.6;
@@ -128,8 +138,8 @@
   gap: 12px;
   padding: 10px 12px;
   margin-bottom: 10px;
-  background: v.$black;
-  border: 1px solid v.$black;
+  @include m.surface-tint(1);
+  border: 1px solid rgba(v.$white, 0.06);
   border-radius: v.$radius-m;
   overflow: hidden;
   transition: background v.$transition-normal, border-color v.$transition-normal, box-shadow v.$transition-normal, opacity v.$transition-normal, filter v.$transition-normal;
@@ -167,6 +177,11 @@
   filter: grayscale(40%);
 }
 
+.list-item.is-complete {
+  background: rgba(v.$white, 0.02);
+  border-color: rgba(v.$white, 0.03);
+}
+
 .list-item.is-complete .list-item__text {
   text-decoration: line-through;
   opacity: 0.4;
@@ -190,13 +205,12 @@
   height: 22px;
   border-radius: 7px;
   border: 2px solid rgba(v.$white, 0.18);
-  background: v.$black;
+  background: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: v.$transition-fast;
-  box-shadow: inset 0 0 0 1px rgba(v.$black, 0.25);
 
   &:focus,
   &:focus-visible {
@@ -206,11 +220,12 @@
 }
 
 .list-item__check {
-  width: 10px;
-  height: 6px;
+  width: 6px;
+  height: 10px;
   border-right: 2px solid v.$white;
   border-bottom: 2px solid v.$white;
   transform: rotate(45deg) scale(0);
+  margin-bottom: 2px;
   transition: transform v.$transition-fast;
 }
 
@@ -225,7 +240,7 @@
 
 .list-item__text {
   flex: 1;
-  font-size: v.$fs-md;
+  font-size: v.$fs-base;
 }
 
 .list-item__delete {
@@ -236,16 +251,16 @@
   cursor: pointer;
   padding: 2px 6px;
   border-radius: 8px;
+  @include m.state-layer;
 
   &:hover {
-    background: v.$black;
     color: v.$white;
   }
 }
 
 .list-item--empty {
   background: transparent;
-  border: 1px dashed v.$black;
+  border: 1px dashed rgba(v.$white, 0.1);
   color: v.$muted;
   justify-content: center;
 }

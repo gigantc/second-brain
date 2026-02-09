@@ -3,7 +3,7 @@
 .viewer {
   grid-area: viewer;
   padding: 36px 44px;
-  border-right: 1px solid v.$black;
+  border-right: 1px solid rgba(v.$white, 0.06);
   min-height: 0;
   overflow-y: auto;
   background: v.$gradient-bg, v.$black;

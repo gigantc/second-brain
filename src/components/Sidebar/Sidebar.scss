@@ -1,9 +1,10 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .sidebar {
   grid-area: sidebar;
-  background: v.$black;
-  border-right: 1px solid v.$black;
+  @include m.surface-tint(1);
+  border-right: 1px solid rgba(v.$white, 0.06);
   padding: 22px 18px;
   display: flex;
   flex-direction: column;

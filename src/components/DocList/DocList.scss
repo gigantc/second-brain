@@ -1,4 +1,5 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .doc-list {
   display: flex;
@@ -76,10 +77,7 @@
   box-shadow: none;
   appearance: none;
   -webkit-appearance: none;
-
-  &:hover {
-    background: v.$black;
-  }
+  @include m.state-layer;
 
   &:focus,
   &:focus-visible,
@@ -89,8 +87,8 @@
   }
 
   &.is-active {
-    background: v.$black;
-    border: 1px solid rgba(v.$green, 0.35);
+    background: rgba(v.$green-light, 0.14);
+    border: 1px solid rgba(v.$green-light, 0.25);
     outline: none;
     box-shadow: none;
   }
@@ -98,7 +96,7 @@
 
 .doc-list__title {
   font-weight: v.$fw-medium;
-  font-size: v.$fs-md;
+  font-size: v.$fs-base;
 }
 
 .doc-list__meta {

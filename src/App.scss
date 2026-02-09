@@ -1,4 +1,5 @@
 @use './styles/variables' as v;
+@use './styles/mixins' as m;
 @use './styles/base';
 
 // Modal shared base styles (used across EditorModal, NewListModal, ConfirmDialog, ShortcutsModal)
@@ -13,8 +14,8 @@
 }
 
 .modal {
-  background: v.$black;
-  border: 1px solid rgba(v.$green, 0.18);
+  @include m.surface-tint(2);
+  border: 1px solid rgba(v.$white, 0.06);
   border-radius: v.$radius-l;
   padding: 20px 24px;
   width: 320px;
@@ -24,6 +25,7 @@
 
 .modal__title {
   font-weight: v.$fw-bold;
+  font-size: v.$fs-md;
   margin-bottom: 10px;
 }
 
@@ -34,8 +36,9 @@
   margin-top: 18px;
 }
 
+// M3 filled button (Save, Add, Sign In)
 .modal__button {
-  padding: 8px 14px;
+  padding: 10px 24px;
   border-radius: v.$radius-pill;
   border: none;
   cursor: pointer;
@@ -44,6 +47,7 @@
   font-size: v.$fs-base;
   font-weight: v.$fw-bold;
   box-shadow: v.$elevation-1;
+  @include m.state-layer;
 
   &:disabled {
     opacity: 0.6;
@@ -51,13 +55,16 @@
   }
 }
 
+// M3 text button (Cancel, Ghost)
 .modal__button--ghost {
   background: transparent;
-  border: 1px solid v.$black;
-  color: v.$white;
+  border: none;
+  color: v.$green-light;
   box-shadow: none;
+  padding: 10px 12px;
 }
 
+// M3 danger filled button
 .modal__button--danger {
   background: v.$danger;
 }
