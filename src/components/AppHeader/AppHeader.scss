@@ -7,8 +7,8 @@
   gap: 16px;
   flex-wrap: nowrap;
   padding: 12px 20px;
-  background: v.$surface;
-  border-bottom: 1px solid v.$border;
+  background: v.$black;
+  border-bottom: 1px solid v.$black;
   box-shadow: v.$elevation-1;
 }
 
@@ -46,9 +46,9 @@
   gap: 6px;
   padding: 8px 10px;
   border-radius: v.$radius-pill;
-  border: 1px solid v.$border;
-  background: v.$surface-2;
-  color: v.$text;
+  border: 1px solid v.$black;
+  background: v.$black;
+  color: v.$white;
   font-size: v.$fs-sm;
   font-weight: v.$fw-bold;
   cursor: pointer;
@@ -62,7 +62,7 @@
 }
 
 .icon-button:hover {
-  background: v.$surface-3;
+  background: v.$black;
 }
 
 .icon-button:focus,
@@ -72,11 +72,11 @@
 }
 
 .icon-button--primary {
-  border-color: v.$accent-alpha-70;
-  color: v.$on-accent;
-  background: v.$accent-alpha-22;
+  border-color: rgba(v.$green, 0.7);
+  color: v.$white;
+  background: rgba(v.$green, 0.22);
 }
 
 .icon-button--primary:hover {
-  background: v.$accent-alpha-32;
+  background: rgba(v.$green, 0.32);
 }

@@ -43,19 +43,19 @@
 .doc__button {
   padding: 8px 12px;
   border-radius: v.$radius-pill;
-  border: 1px solid v.$border;
-  background: v.$surface-2;
-  color: v.$text;
+  border: 1px solid v.$black;
+  background: v.$black;
+  color: v.$white;
   font-size: v.$fs-sm;
   cursor: pointer;
 
   &:hover {
-    background: v.$surface-3;
+    background: v.$black;
   }
 }
 
 .doc__brief-delete {
-  border: 1px solid v.$danger-alpha-45;
+  border: 1px solid rgba(v.$danger, 0.45);
   background: transparent;
   color: v.$danger;
   padding: 8px 14px;
@@ -64,14 +64,14 @@
   cursor: pointer;
 
   &:hover {
-    background: v.$danger-alpha-12;
+    background: rgba(v.$danger, 0.12);
   }
 }
 
 .doc__content {
   margin-top: 22px;
   line-height: 1.7;
-  color: v.$text;
+  color: v.$white;
   font-size: 14px;
 }
 
@@ -92,13 +92,13 @@
 
 .doc__content input[type="checkbox"] {
   margin-right: 8px;
-  accent-color: v.$accent;
+  accent-color: v.$green;
 }
 
 .doc__content a {
-  color: v.$accent-2;
+  color: v.$green;
   text-decoration: none;
-  border-bottom: 1px solid v.$border-alpha-40;
+  border-bottom: 1px solid rgba(v.$green, 0.4);
 
   &:hover {
     opacity: 0.85;
@@ -112,16 +112,16 @@
 }
 
 .doc__content code {
-  background: v.$code-bg;
-  border: 1px solid v.$border;
+  background: rgba(v.$black, 0.6);
+  border: 1px solid v.$black;
   padding: 2px 6px;
   border-radius: 8px;
 }
 
 .doc__content pre {
-  background: v.$code-bg-dark;
+  background: rgba(v.$black, 0.75);
   padding: 16px;
   border-radius: v.$radius-m;
-  border: 1px solid v.$border;
+  border: 1px solid v.$black;
   overflow: auto;
 }

@@ -5,7 +5,7 @@
 .modal__backdrop {
   position: fixed;
   inset: 0;
-  background: v.$backdrop;
+  background: rgba(v.$black, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,12 +13,12 @@
 }
 
 .modal {
-  background: v.$surface;
-  border: 1px solid v.$accent-alpha-18;
+  background: v.$black;
+  border: 1px solid rgba(v.$green, 0.18);
   border-radius: v.$radius-l;
   padding: 20px 24px;
   width: 320px;
-  color: v.$text;
+  color: v.$white;
   box-shadow: v.$elevation-2;
 }
 
@@ -39,8 +39,8 @@
   border-radius: v.$radius-pill;
   border: none;
   cursor: pointer;
-  background: v.$accent;
-  color: v.$on-accent;
+  background: v.$green;
+  color: v.$white;
   font-size: v.$fs-base;
   font-weight: v.$fw-bold;
   box-shadow: v.$elevation-1;
@@ -53,8 +53,8 @@
 
 .modal__button--ghost {
   background: transparent;
-  border: 1px solid v.$border;
-  color: v.$text;
+  border: 1px solid v.$black;
+  color: v.$white;
   box-shadow: none;
 }
 

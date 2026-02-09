@@ -44,29 +44,29 @@
   padding: 8px 10px;
   border-radius: v.$radius-m;
   border: 1px solid transparent;
-  background: v.$surface-2;
-  color: v.$text;
-  box-shadow: inset 0 0 0 1px v.$border;
+  background: v.$black;
+  color: v.$white;
+  box-shadow: inset 0 0 0 1px v.$black;
 }
 
 .list__rename,
 .list__rename-save,
 .list__rename-cancel {
-  border: 1px solid v.$border;
+  border: 1px solid v.$black;
   background: transparent;
-  color: v.$text;
+  color: v.$white;
   padding: 6px 12px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
 
   &:hover {
-    background: v.$white-alpha-06;
+    background: rgba(v.$white, 0.06);
   }
 }
 
 .list__delete {
-  border: 1px solid v.$danger-alpha-45;
+  border: 1px solid rgba(v.$danger, 0.45);
   background: transparent;
   color: v.$danger;
   padding: 8px 14px;
@@ -75,7 +75,7 @@
   cursor: pointer;
 
   &:hover {
-    background: v.$danger-alpha-12;
+    background: rgba(v.$danger, 0.12);
   }
 }
 
@@ -100,8 +100,8 @@
   border-radius: v.$radius-pill;
   border: none;
   cursor: pointer;
-  background: v.$accent;
-  color: v.$on-accent;
+  background: v.$green;
+  color: v.$white;
   font-size: v.$fs-base;
   font-weight: v.$fw-bold;
   box-shadow: v.$elevation-1;
@@ -128,8 +128,8 @@
   gap: 12px;
   padding: 10px 12px;
   margin-bottom: 10px;
-  background: v.$surface-2;
-  border: 1px solid v.$border;
+  background: v.$black;
+  border: 1px solid v.$black;
   border-radius: v.$radius-m;
   overflow: hidden;
   transition: background v.$transition-normal, border-color v.$transition-normal, box-shadow v.$transition-normal, opacity v.$transition-normal, filter v.$transition-normal;
@@ -177,8 +177,8 @@
 }
 
 .list-item.is-completing .list-item__checkbox {
-  background: v.$accent;
-  border-color: v.$accent-alpha-60;
+  background: v.$green;
+  border-color: rgba(v.$green, 0.6);
 }
 
 .list-item.is-completing .list-item__check {
@@ -189,14 +189,14 @@
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  border: 2px solid v.$white-alpha-18;
-  background: v.$surface-3;
+  border: 2px solid rgba(v.$white, 0.18);
+  background: v.$black;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: v.$transition-fast;
-  box-shadow: inset 0 0 0 1px v.$black-alpha-25;
+  box-shadow: inset 0 0 0 1px rgba(v.$black, 0.25);
 
   &:focus,
   &:focus-visible {
@@ -208,15 +208,15 @@
 .list-item__check {
   width: 10px;
   height: 6px;
-  border-right: 2px solid v.$on-accent;
-  border-bottom: 2px solid v.$on-accent;
+  border-right: 2px solid v.$white;
+  border-bottom: 2px solid v.$white;
   transform: rotate(45deg) scale(0);
   transition: transform v.$transition-fast;
 }
 
 .list-item.is-complete .list-item__checkbox {
-  background: v.$accent;
-  border-color: v.$accent-alpha-60;
+  background: v.$green;
+  border-color: rgba(v.$green, 0.6);
 }
 
 .list-item.is-complete .list-item__check {
@@ -238,14 +238,14 @@
   border-radius: 8px;
 
   &:hover {
-    background: v.$surface-3;
-    color: v.$text;
+    background: v.$black;
+    color: v.$white;
   }
 }
 
 .list-item--empty {
   background: transparent;
-  border: 1px dashed v.$border;
+  border: 1px dashed v.$black;
   color: v.$muted;
   justify-content: center;
 }

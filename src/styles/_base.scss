@@ -9,28 +9,28 @@
 }
 
 *::selection {
-  background: v.$selection-bg;
-  color: v.$text;
+  background: rgba(v.$green, 0.35);
+  color: v.$white;
 }
 
 body {
   margin: 0;
   font-family: v.$font-stack;
   font-weight: v.$fw-normal;
-  background: v.$gradient-bg, v.$bg;
-  color: v.$text;
+  background: v.$gradient-bg, v.$black;
+  color: v.$white;
 }
 
 .highlight {
-  background: v.$accent-alpha-20;
-  color: v.$text;
+  background: rgba(v.$green, 0.2);
+  color: v.$white;
   padding: 0 3px;
   border-radius: 6px;
 }
 
 .tag {
-  background: v.$surface-3;
-  border: 1px solid v.$border;
+  background: v.$black;
+  border: 1px solid v.$black;
   border-radius: v.$radius-pill;
   padding: 4px 10px;
   font-size: v.$fs-sm;

@@ -2,7 +2,7 @@
 
 .rightbar {
   grid-area: rightbar;
-  background: v.$surface;
+  background: v.$black;
   padding: 22px 18px;
   color: v.$muted;
   font-size: v.$fs-base;
@@ -21,12 +21,12 @@
   margin-bottom: 18px;
   padding: 14px;
   border-radius: v.$radius-m;
-  background: v.$surface-2;
-  border: 1px solid v.$accent-border-12;
+  background: v.$black;
+  border: 1px solid rgba(v.$green, 0.12);
 }
 
 .rightbar__title {
-  color: v.$text;
+  color: v.$white;
   font-size: v.$fs-base;
   margin-bottom: 8px;
   font-weight: v.$fw-bold;
@@ -57,14 +57,14 @@
   background: none;
   border: none;
   border-radius: v.$radius-s;
-  color: v.$text;
+  color: v.$white;
   cursor: pointer;
   transition: v.$transition-fast;
   outline: none;
   font-weight: v.$fw-medium;
 
   &:hover {
-    background: v.$surface-3;
+    background: v.$black;
   }
 
   &:focus,
@@ -82,7 +82,7 @@
 }
 
 .rightbar__snippet strong {
-  color: v.$text;
+  color: v.$white;
   font-weight: v.$fw-semi;
 }
 
@@ -95,18 +95,18 @@
   background: none;
   border: none;
   border-radius: v.$radius-s;
-  color: v.$text;
+  color: v.$white;
   cursor: pointer;
   transition: v.$transition-fast;
   outline: none;
   font-weight: v.$fw-medium;
 
   &:hover {
-    background: v.$surface-3;
+    background: v.$black;
   }
 
   &.is-active {
-    background: v.$accent-alpha-25;
+    background: rgba(v.$green, 0.25);
   }
 
   &:focus,

@@ -1,46 +1,14 @@
 // Colors
-$bg: #0e1117;
-$surface: #151a22;
-$surface-2: #1c2230;
-$surface-3: #252c3d;
-$surface-4: #2f374a;
-$border: #2f3646;
-$text: #f5f7ff;
+$black: #0e1117;
+$white: #f4fff8;
 $muted: #b6bfd4;
-$accent: #0f5132;
-$accent-2: #0a5c36;
-$on-accent: #f4fff8;
+$green: #0a5c36;
 $danger: #ff6b6b;
 
-// Accent alphas
-$accent-alpha-12: rgba(10, 92, 54, 0.12);
-$accent-alpha-14: rgba(10, 92, 54, 0.14);
-$accent-alpha-18: rgba(15, 81, 50, 0.18);
-$accent-alpha-20: rgba(10, 92, 54, 0.2);
-$accent-alpha-22: rgba(10, 92, 54, 0.22);
-$accent-alpha-25: rgba(10, 92, 54, 0.25);
-$accent-alpha-32: rgba(10, 92, 54, 0.32);
-$accent-alpha-35: rgba(10, 92, 54, 0.35);
-$accent-alpha-45: rgba(10, 92, 54, 0.45);
-$accent-alpha-60: rgba(10, 92, 54, 0.6);
-$accent-alpha-70: rgba(10, 92, 54, 0.7);
-$accent-grad-82: rgba(10, 92, 54, 0.82);
-$accent-grad-90: rgba(15, 81, 50, 0.9);
-$accent-border-12: rgba(20, 69, 47, 0.12);
-$accent-border-28: rgba(20, 69, 47, 0.28);
-$danger-alpha-12: rgba(255, 107, 107, 0.12);
-$danger-alpha-45: rgba(255, 107, 107, 0.45);
-$white-alpha-06: rgba(255, 255, 255, 0.06);
-$white-alpha-18: rgba(255, 255, 255, 0.18);
-$black-alpha-25: rgba(0, 0, 0, 0.25);
-$backdrop: rgba(6, 8, 12, 0.72);
-$border-alpha-40: rgba(10, 92, 54, 0.4);
-$selection-bg: rgba(10, 92, 54, 0.35);
-$code-bg: rgba(7, 10, 16, 0.6);
-$code-bg-dark: rgba(7, 10, 16, 0.75);
-$gradient-bg: radial-gradient(circle at top, rgba(10, 92, 54, 0.14), transparent 45%);
-$swipe-gradient: linear-gradient(90deg, transparent 0%, rgba(15, 81, 50, 0.3) 35%, rgba(10, 92, 54, 0.55) 50%, rgba(15, 81, 50, 0.3) 65%, transparent 100%);
-$heading-gradient: linear-gradient(135deg, rgba(15, 81, 50, 0.9), rgba(10, 92, 54, 0.82));
+// Semantic colors
+$gradient-bg: radial-gradient(circle at top, rgba($green, 0.14), transparent 45%);
+$swipe-gradient: linear-gradient(90deg, transparent 0%, rgba($green, 0.3) 35%, rgba($green, 0.55) 50%, rgba($green, 0.3) 65%, transparent 100%);
+$heading-gradient: linear-gradient(135deg, rgba($green, 0.9), rgba($green, 0.82));
 
 // Radii
 $radius-s: 10px;
@@ -49,10 +17,10 @@ $radius-l: 20px;
 $radius-pill: 999px;
 
 // Shadows
-$elevation-1: 0 1px 2px rgba(8, 12, 18, 0.5), 0 4px 16px rgba(8, 12, 18, 0.35);
-$elevation-2: 0 6px 20px rgba(8, 12, 18, 0.5), 0 12px 28px rgba(8, 12, 18, 0.45);
-$ring: 0 0 0 2px rgba(10, 92, 54, 0.45);
-$ring-soft: 0 0 0 3px rgba(20, 69, 47, 0.28);
+$elevation-1: 0 1px 2px rgba($black, 0.5), 0 4px 16px rgba($black, 0.35);
+$elevation-2: 0 6px 20px rgba($black, 0.5), 0 12px 28px rgba($black, 0.45);
+$ring: 0 0 0 2px rgba($green, 0.45);
+$ring-soft: 0 0 0 3px rgba($green, 0.28);
 
 // Typography
 $font-stack: "Roboto Flex", "Roboto", "Inter", system-ui, -apple-system, sans-serif;

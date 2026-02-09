@@ -2,8 +2,8 @@
 
 .sidebar {
   grid-area: sidebar;
-  background: v.$surface;
-  border-right: 1px solid v.$border;
+  background: v.$black;
+  border-right: 1px solid v.$black;
   padding: 22px 18px;
   display: flex;
   flex-direction: column;
