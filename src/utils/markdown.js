@@ -32,12 +32,24 @@ export function parseBriefMarkets(content) {
   const lines = content.split('\n')
   const keys = ['S&P 500', 'Nasdaq', 'Dow', 'BTC', 'ETH']
   const results = {}
+
+  const extractValue = (line) => {
+    const match = line.match(/:\s*\$?([0-9][0-9,]*\.?\d*)/)
+    if (!match) return null
+    const numeric = Number(match[1].replace(/,/g, ''))
+    return Number.isNaN(numeric) ? null : numeric
+  }
+
   lines.forEach((line) => {
     keys.forEach((key) => {
-      if (line.includes(`**${key}**`)) {
-        results[key] = line.replace(/^-\s*/, '').trim()
+      if (line.includes(key)) {
+        results[key] = {
+          raw: line.replace(/^-\s*/, '').trim(),
+          value: extractValue(line),
+        }
       }
     })
   })
+
   return results
 }
