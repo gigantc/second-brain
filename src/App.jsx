@@ -539,6 +539,13 @@ export default function App() {
     setEditorTags('')
   }
 
+  const handleDeleteBrief = async (docItem) => {
+    if (!docItem?.id) return
+    await deleteDoc(doc(db, 'notes', docItem.id))
+    setActivePath(null)
+    setActiveListId(null)
+  }
+
   const handleCreateList = async () => {
     if (!user) return
     const title = listTitle.trim() || 'Untitled List'
@@ -1438,10 +1445,25 @@ export default function App() {
                   ))}
                 </div>
               )}
-              {user && activeDoc.source === 'firestore' && (
+              {user && activeDoc.source === 'firestore' && !activeDoc.isBrief && (
                 <div className="doc__actions">
                   <button className="doc__button" onClick={() => openEditor(activeDoc)}>
                     Edit Note
+                  </button>
+                </div>
+              )}
+              {user && activeDoc.source === 'firestore' && activeDoc.isBrief && (
+                <div className="doc__actions">
+                  <button
+                    className="doc__button"
+                    onClick={() => openConfirmDialog({
+                      title: 'Delete brief?',
+                      body: <>Delete <strong>{activeDoc.title}</strong>? This cannot be undone.</>,
+                      confirmLabel: 'Delete Brief',
+                      onConfirm: () => handleDeleteBrief(activeDoc),
+                    })}
+                  >
+                    Delete Brief
                   </button>
                 </div>
               )}
