@@ -1,4 +1,4 @@
-import { CirclePlus, ListTodo } from 'lucide-react'
+import { FilePlus2, ListTodo } from 'lucide-react'
 import Auth from '../Auth/Auth'
 import './AppHeader.scss'
 
@@ -14,7 +14,7 @@ export default function AppHeader({ user, onNewNote, onNewList, theme, onThemeCh
         {user && (
           <>
             <button className="icon-button icon-button--primary" onClick={onNewNote} type="button">
-              <CirclePlus aria-hidden="true" strokeWidth={2} size={16} />
+              <FilePlus2 aria-hidden="true" strokeWidth={2} size={16} />
               <span>New</span>
             </button>
             <button className="icon-button" onClick={onNewList} type="button">
