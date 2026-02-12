@@ -271,3 +271,23 @@
   color: v.$muted;
   justify-content: center;
 }
+
+@media (max-width: 900px) {
+  .list__header h1 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .list__meta {
+    font-size: 14px;
+  }
+
+  .list-item {
+    padding: 12px 12px;
+  }
+
+  .list-item__text {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+}

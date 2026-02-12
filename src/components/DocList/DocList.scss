@@ -109,3 +109,18 @@
   color: v.$muted;
   padding: 12px;
 }
+
+@media (max-width: 900px) {
+  .doc-list__heading {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+  }
+
+  .doc-list__title {
+    font-size: 17px;
+  }
+
+  .doc-list__meta {
+    font-size: 14px;
+  }
+}

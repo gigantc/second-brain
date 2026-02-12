@@ -138,3 +138,27 @@
   border: 1px solid rgba(v.$white, 0.06);
   overflow: auto;
 }
+
+@media (max-width: 900px) {
+  .doc__header h1 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .doc__content {
+    font-size: 15px;
+    line-height: 1.78;
+  }
+
+  .doc__content h2 {
+    font-size: 21px;
+  }
+
+  .doc__content h3 {
+    font-size: 18px;
+  }
+
+  .doc__content .source {
+    font-size: 13px;
+  }
+}

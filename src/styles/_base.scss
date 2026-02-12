@@ -71,6 +71,12 @@ body {
   color: v.$white;
 }
 
+@media (max-width: 900px) {
+  body {
+    font-size: 15px;
+  }
+}
+
 .highlight {
   background: rgba(var(--accent-light-rgb), 0.15);
   color: v.$white;
