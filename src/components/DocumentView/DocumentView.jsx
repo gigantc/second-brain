@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from 'lucide-react'
 import './DocumentView.scss'
 
 export default function DocumentView({
@@ -27,8 +28,9 @@ export default function DocumentView({
           )}
           {user && !activeDoc.isBrief && (
             <div className="doc__actions">
-              <button className="doc__button" onClick={() => onEdit(activeDoc)}>
-                Edit Note
+              <button className="doc__button" onClick={() => onEdit(activeDoc)} aria-label="Edit note" title="Edit note">
+                <Pencil aria-hidden="true" size={16} strokeWidth={2} />
+                <span>Edit</span>
               </button>
             </div>
           )}
@@ -38,8 +40,11 @@ export default function DocumentView({
             className="doc__brief-delete"
             type="button"
             onClick={() => onDeleteBrief(activeDoc)}
+            aria-label="Delete brief"
+            title="Delete brief"
           >
-            Delete Brief
+            <Trash2 aria-hidden="true" size={16} strokeWidth={2} />
+            <span>Delete</span>
           </button>
         )}
       </header>

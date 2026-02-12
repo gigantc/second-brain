@@ -31,6 +31,8 @@ import Sidebar from './components/Sidebar/Sidebar'
 import Viewer from './components/Viewer/Viewer'
 import LoginPage from './components/LoginPage/LoginPage'
 
+const APP_VERSION = '0.1.0'
+
 export default function App() {
   const [firestoreDocs, setFirestoreDocs] = useState([])
   const [firestoreLists, setFirestoreLists] = useState([])
@@ -52,7 +54,17 @@ export default function App() {
   const [activeListId, setActiveListId] = useState(null)
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [theme, setTheme] = useState(() => localStorage.getItem('dock.theme') || 'green')
+  const [isMobileViewport, setIsMobileViewport] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.innerWidth <= 900
+  })
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return window.innerWidth > 900
+  })
+  const appRef = useRef(null)
   const searchRef = useRef(null)
+  const isMobileRef = useRef(typeof window !== 'undefined' ? window.innerWidth <= 900 : false)
 
   useEffect(() => onAuthStateChanged(auth, (nextUser) => {
     setUser(nextUser)
@@ -62,6 +74,22 @@ export default function App() {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('dock.theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    const syncSidebarForViewport = () => {
+      const isMobile = window.innerWidth <= 900
+      setIsMobileViewport(isMobile)
+      if (isMobile !== isMobileRef.current) {
+        isMobileRef.current = isMobile
+        setSidebarOpen(!isMobile)
+      }
+    }
+
+    // Handles device-emulation viewport settling after initial JS load.
+    requestAnimationFrame(syncSidebarForViewport)
+    window.addEventListener('resize', syncSidebarForViewport)
+    return () => window.removeEventListener('resize', syncSidebarForViewport)
+  }, [])
 
   useEffect(() => {
     if (!user) {
@@ -535,12 +563,26 @@ export default function App() {
   const totalCount = docs.length + firestoreLists.length
   const filteredCount = filtered.length + filteredLists.length
 
+  useEffect(() => {
+    if (!appRef.current) return
+    const targetWidth = sidebarOpen
+      ? (isMobileViewport ? 280 : 320)
+      : 56
+
+    gsap.to(appRef.current, {
+      '--sidebar-width': `${targetWidth}px`,
+      duration: 0.46,
+      ease: 'power3.inOut',
+      overwrite: 'auto',
+    })
+  }, [sidebarOpen, isMobileViewport])
+
   if (!user) {
     return <LoginPage />
   }
 
   return (
-    <div className="app">
+    <div className="app" ref={appRef}>
       {showEditor && (
         <EditorModal
           editorId={editorId}
@@ -583,10 +625,9 @@ export default function App() {
 
       <AppHeader
         user={user}
-        onNewNote={() => openEditor()}
-        onNewList={() => setShowListModal(true)}
         theme={theme}
         onThemeChange={setTheme}
+        version={APP_VERSION}
       />
 
       <Sidebar
@@ -601,13 +642,19 @@ export default function App() {
         onToggleSection={(key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }))}
         activeDoc={activeDoc}
         activeListId={activeListId}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        onNewNote={() => openEditor()}
+        onNewList={() => setShowListModal(true)}
         onSelectDoc={(path) => {
           setActivePath(path)
           setActiveListId(null)
+          if (isMobileViewport) setSidebarOpen(false)
         }}
         onSelectList={(id) => {
           setActiveListId(id)
           setActivePath(null)
+          if (isMobileViewport) setSidebarOpen(false)
         }}
       />
 

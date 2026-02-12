@@ -3,6 +3,7 @@
 
 .auth-menu {
   position: relative;
+  z-index: 40;
 }
 
 .auth-menu__avatar {
@@ -15,6 +16,9 @@
   font-size: v.$fs-sm;
   font-weight: v.$fw-bold;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   @include m.state-layer;
   @include m.focus-ring;
 }
@@ -93,4 +97,20 @@
   font-size: v.$fs-sm;
   cursor: pointer;
   @include m.state-layer;
+}
+
+.auth-menu__version {
+  margin-top: 6px;
+  padding: 6px 10px 2px;
+  border-top: 1px solid rgba(v.$white, 0.08);
+  color: v.$muted;
+  font-size: v.$fs-xs;
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .auth-menu__avatar {
+    width: 34px;
+    height: 34px;
+  }
 }

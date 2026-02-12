@@ -11,7 +11,7 @@ const THEMES = [
   { id: 'teal', label: 'Teal', color: '#14b8a6' },
 ]
 
-export default function Auth({ user, theme, onThemeChange }) {
+export default function Auth({ user, theme, onThemeChange, version }) {
   const [open, setOpen] = useState(false)
   const wrapRef = useRef(null)
 
@@ -78,6 +78,8 @@ export default function Auth({ user, theme, onThemeChange }) {
           >
             Log out
           </button>
+
+          {version && <div className="auth-menu__version">v{version}</div>}
         </div>
       )}
     </div>

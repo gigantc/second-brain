@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { Trash2 } from 'lucide-react'
 
 export default function SortableListItem({ item, onToggle, onDelete }) {
   const {
@@ -40,8 +41,9 @@ export default function SortableListItem({ item, onToggle, onDelete }) {
         type="button"
         onClick={onDelete}
         aria-label="Delete item"
+        title="Delete item"
       >
-        ×
+        <Trash2 aria-hidden="true" size={14} strokeWidth={2} />
       </button>
     </li>
   )

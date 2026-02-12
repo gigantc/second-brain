@@ -48,10 +48,14 @@
 .list__rename,
 .list__rename-save,
 .list__rename-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(v.$white, 0.12);
   background: transparent;
   color: v.$white;
-  padding: 10px 16px;
+  width: 36px;
+  height: 36px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
@@ -68,15 +72,18 @@
 .list__rename-cancel {
   border: none;
   color: var(--accent-light);
-  padding: 10px 12px;
 }
 
 // M3 danger outlined button
 .list__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(v.$danger, 0.45);
   background: transparent;
   color: v.$danger;
-  padding: 10px 16px;
+  width: 40px;
+  height: 40px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
@@ -263,4 +270,24 @@
   border: 1px dashed rgba(v.$white, 0.1);
   color: v.$muted;
   justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .list__header h1 {
+    font-size: var(--type-h1);
+    line-height: 1.2;
+  }
+
+  .list__meta {
+    font-size: var(--type-meta);
+  }
+
+  .list-item {
+    padding: 10px 10px;
+  }
+
+  .list-item__text {
+    font-size: var(--type-body);
+    line-height: var(--lh-body);
+  }
 }

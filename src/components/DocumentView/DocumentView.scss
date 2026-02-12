@@ -20,7 +20,7 @@
 
 .doc__header h1 {
   margin: 0 0 10px;
-  font-size: v.$fs-xl;
+  font-size: var(--type-h1);
   font-weight: v.$fw-bold;
   letter-spacing: 0.01em;
 }
@@ -43,7 +43,10 @@
 
 // M3 outlined button
 .doc__button {
-  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
   border-radius: v.$radius-pill;
   border: 1px solid rgba(v.$white, 0.12);
   background: transparent;
@@ -61,10 +64,13 @@
 
 // M3 danger outlined button
 .doc__brief-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid rgba(v.$danger, 0.45);
   background: transparent;
   color: v.$danger;
-  padding: 10px 16px;
+  padding: 10px 12px;
   border-radius: v.$radius-pill;
   font-size: v.$fs-sm;
   cursor: pointer;
@@ -82,10 +88,23 @@
   font-size: v.$fs-base;
 }
 
+.doc__content h1,
 .doc__content h2,
 .doc__content h3 {
   margin-top: 26px;
   font-weight: v.$fw-semi;
+}
+
+.doc__content h1 {
+  font-size: var(--type-h1);
+}
+
+.doc__content h2 {
+  font-size: var(--type-h2);
+}
+
+.doc__content h3 {
+  font-size: var(--type-h3);
 }
 
 .doc__content ul {
@@ -131,4 +150,20 @@
   border-radius: v.$radius-m;
   border: 1px solid rgba(v.$white, 0.06);
   overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .doc__header h1 {
+    line-height: 1.2;
+  }
+
+  .doc__date,
+  .doc__content .source {
+    font-size: var(--type-meta);
+  }
+
+  .doc__content {
+    font-size: var(--type-body);
+    line-height: var(--lh-body);
+  }
 }

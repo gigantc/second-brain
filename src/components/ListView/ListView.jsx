@@ -9,6 +9,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
+import { Pencil, Save, Trash2, X } from 'lucide-react'
 import SortableListItem from './SortableListItem'
 import './ListView.scss'
 
@@ -89,8 +90,10 @@ export default function ListView({
                 className="list__rename-save"
                 type="button"
                 onClick={handleRename}
+                aria-label="Save list name"
+                title="Save"
               >
-                Save
+                <Save aria-hidden="true" size={16} strokeWidth={2} />
               </button>
               <button
                 className="list__rename-cancel"
@@ -99,8 +102,10 @@ export default function ListView({
                   setIsEditingListTitle(false)
                   setListTitleDraft(activeList.title || '')
                 }}
+                aria-label="Cancel rename"
+                title="Cancel"
               >
-                Cancel
+                <X aria-hidden="true" size={16} strokeWidth={2} />
               </button>
             </div>
           ) : (
@@ -113,8 +118,10 @@ export default function ListView({
                   setIsEditingListTitle(true)
                   setListTitleDraft(activeList.title || '')
                 }}
+                aria-label="Rename list"
+                title="Rename list"
               >
-                Rename
+                <Pencil aria-hidden="true" size={16} strokeWidth={2} />
               </button>
             </div>
           )}
@@ -126,8 +133,10 @@ export default function ListView({
           className="list__delete"
           type="button"
           onClick={onDeleteList}
+          aria-label="Delete list"
+          title="Delete list"
         >
-          Delete list
+          <Trash2 aria-hidden="true" size={16} strokeWidth={2} />
         </button>
       </header>
       <div className="list__composer">
@@ -192,8 +201,9 @@ export default function ListView({
                   type="button"
                   onClick={() => onDeleteItem(activeList.id, item.id)}
                   aria-label="Delete item"
+                  title="Delete item"
                 >
-                  ×
+                  <Trash2 aria-hidden="true" size={14} strokeWidth={2} />
                 </button>
               </li>
             ))}

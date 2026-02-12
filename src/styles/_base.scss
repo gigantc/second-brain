@@ -7,6 +7,14 @@
   --accent-rgb: 10, 92, 54;
   --accent-light-rgb: 111, 220, 154;
   --ring-soft: 0 0 0 3px rgba(var(--accent-light-rgb), 0.3);
+
+  // Base typography scale (desktop defaults)
+  --type-body: 14px;
+  --type-h1: 26px;
+  --type-h2: 20px;
+  --type-h3: 17px;
+  --type-meta: 12px;
+  --lh-body: 1.55;
 }
 
 body[data-theme='blue'] {
@@ -64,11 +72,48 @@ body {
   margin: 0;
   font-family: v.$font-stack;
   font-weight: v.$fw-normal;
-  font-size: v.$fs-base;
+  font-size: var(--type-body);
+  line-height: var(--lh-body);
   background:
     radial-gradient(circle at top, rgba(var(--accent-rgb), 0.14), transparent 45%),
     v.$black;
   color: v.$white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.5em;
+  line-height: 1.22;
+  letter-spacing: 0.005em;
+}
+
+h1 { font-size: var(--type-h1); }
+h2 { font-size: var(--type-h2); }
+h3 { font-size: var(--type-h3); }
+
+p,
+li {
+  font-size: var(--type-body);
+  line-height: var(--lh-body);
+}
+
+small {
+  font-size: var(--type-meta);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --type-body: 13px;
+    --type-h1: 18px;
+    --type-h2: 15px;
+    --type-h3: 13px;
+    --type-meta: 11px;
+    --lh-body: 1.45;
+  }
 }
 
 .highlight {

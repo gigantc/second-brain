@@ -109,3 +109,18 @@
   color: v.$muted;
   padding: 12px;
 }
+
+@media (max-width: 900px) {
+  .doc-list__heading {
+    font-size: var(--type-meta);
+    letter-spacing: 0.1em;
+  }
+
+  .doc-list__title {
+    font-size: var(--type-body);
+  }
+
+  .doc-list__meta {
+    font-size: var(--type-meta);
+  }
+}

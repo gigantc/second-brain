@@ -17,3 +17,10 @@
   margin-bottom: 8px;
   opacity: 0.9;
 }
+
+@media (max-width: 900px) {
+  .search__hint {
+    font-size: var(--type-meta);
+    line-height: 1.25;
+  }
+}
