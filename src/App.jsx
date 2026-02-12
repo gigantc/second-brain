@@ -54,6 +54,7 @@ export default function App() {
   const [activeListId, setActiveListId] = useState(null)
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [theme, setTheme] = useState(() => localStorage.getItem('dock.theme') || 'green')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const searchRef = useRef(null)
 
   useEffect(() => onAuthStateChanged(auth, (nextUser) => {
@@ -536,13 +537,14 @@ export default function App() {
 
   const totalCount = docs.length + firestoreLists.length
   const filteredCount = filtered.length + filteredLists.length
+  const isMobileViewport = () => window.innerWidth <= 900
 
   if (!user) {
     return <LoginPage />
   }
 
   return (
-    <div className="app">
+    <div className={`app ${sidebarOpen ? 'is-sidebar-open' : 'is-sidebar-collapsed'}`}>
       {showEditor && (
         <EditorModal
           editorId={editorId}
@@ -590,7 +592,18 @@ export default function App() {
         theme={theme}
         onThemeChange={setTheme}
         version={APP_VERSION}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
+
+      {sidebarOpen && isMobileViewport() && (
+        <button
+          className="app__sidebar-scrim"
+          type="button"
+          aria-label="Close sidebar"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       <Sidebar
         ref={searchRef}
@@ -607,10 +620,12 @@ export default function App() {
         onSelectDoc={(path) => {
           setActivePath(path)
           setActiveListId(null)
+          if (isMobileViewport()) setSidebarOpen(false)
         }}
         onSelectList={(id) => {
           setActiveListId(id)
           setActivePath(null)
+          if (isMobileViewport()) setSidebarOpen(false)
         }}
       />
 

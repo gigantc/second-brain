@@ -71,24 +71,48 @@
 
 // App layout grid
 .app {
+  --sidebar-width: 280px;
   display: grid;
-  grid-template-columns: 280px 1fr 280px;
+  grid-template-columns: var(--sidebar-width) 1fr 280px;
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    "header header header"
-    "sidebar viewer rightbar";
+    'header header header'
+    'sidebar viewer rightbar';
   height: 100vh;
   min-height: 0;
   overflow: hidden;
+  position: relative;
+}
+
+.sidebar {
+  transition: transform v.$transition-normal, opacity v.$transition-normal, padding v.$transition-normal;
+}
+
+.app.is-sidebar-collapsed {
+  --sidebar-width: 0px;
+}
+
+.app.is-sidebar-collapsed .sidebar {
+  transform: translateX(-102%);
+  opacity: 0;
+  pointer-events: none;
+  padding-left: 0;
+  padding-right: 0;
+  border-right: none;
+}
+
+.app__sidebar-scrim {
+  display: none;
 }
 
 @media (max-width: 1100px) {
   .app {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: var(--sidebar-width) 1fr;
     grid-template-areas:
-      "header header"
-      "sidebar viewer";
+      'header header'
+      'sidebar viewer';
   }
+
   .rightbar {
     display: none;
   }
@@ -98,23 +122,55 @@
   .app {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "header"
-      "sidebar"
-      "viewer";
-    height: auto;
-    overflow: visible;
+      'header'
+      'viewer';
+    height: 100vh;
+    overflow: hidden;
   }
+
   .app-header {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
-  .sidebar {
-    height: auto;
-    overflow: visible;
-  }
+
   .viewer {
     padding: 24px 20px;
-    overflow: visible;
+    overflow: auto;
+    border-right: none;
   }
+
+  .sidebar {
+    position: absolute;
+    top: 62px;
+    left: 0;
+    bottom: 0;
+    width: min(86vw, 320px);
+    z-index: 30;
+    border-right: 1px solid rgba(v.$white, 0.12);
+    box-shadow: v.$elevation-2;
+    transform: translateX(-104%);
+    opacity: 0;
+    pointer-events: none;
+    padding: 16px 14px;
+  }
+
+  .app.is-sidebar-open .sidebar {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .app__sidebar-scrim {
+    display: block;
+    position: absolute;
+    top: 62px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: none;
+    background: rgba(v.$black, 0.5);
+    z-index: 20;
+  }
+
   .rightbar {
     overflow: visible;
   }

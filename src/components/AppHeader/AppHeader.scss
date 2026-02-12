@@ -25,6 +25,12 @@
   width: auto;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .brand__title {
   font-size: v.$fs-lg;
   font-weight: v.$fw-semi;
@@ -74,4 +80,25 @@
 
 .icon-button--primary:hover {
   background: rgba(var(--accent-rgb), 0.85);
+}
+
+.icon-button--nav {
+  padding: 8px;
+  background: transparent;
+  border: 1px solid rgba(v.$white, 0.12);
+  color: v.$white;
+}
+
+@media (max-width: 900px) {
+  .app-header {
+    padding: 10px 14px;
+  }
+
+  .icon-button {
+    padding: 8px 12px;
+  }
+
+  .icon-button--nav {
+    padding: 8px;
+  }
 }
