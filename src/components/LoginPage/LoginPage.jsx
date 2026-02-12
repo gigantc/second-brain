@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  auth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from '../../firebase'
+import { auth, signInWithEmailAndPassword } from '../../firebase'
 import './LoginPage.scss'
 
 export default function LoginPage() {
@@ -12,16 +8,11 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const handleAuth = async (mode) => {
+  const handleSignIn = async () => {
     setError('')
     setSubmitting(true)
     try {
-      const cleanEmail = email.trim()
-      if (mode === 'signin') {
-        await signInWithEmailAndPassword(auth, cleanEmail, password)
-      } else {
-        await createUserWithEmailAndPassword(auth, cleanEmail, password)
-      }
+      await signInWithEmailAndPassword(auth, email.trim(), password)
     } catch (authError) {
       setError(authError.message || 'Authentication failed.')
     } finally {
@@ -56,19 +47,11 @@ export default function LoginPage() {
           <div className="login-card__actions">
             <button
               className="login-card__button"
-              onClick={() => handleAuth('signin')}
+              onClick={handleSignIn}
               disabled={submitting}
               type="button"
             >
               Sign in
-            </button>
-            <button
-              className="login-card__button login-card__button--ghost"
-              onClick={() => handleAuth('signup')}
-              disabled={submitting}
-              type="button"
-            >
-              Sign up
             </button>
           </div>
 
