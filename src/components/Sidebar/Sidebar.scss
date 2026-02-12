@@ -76,6 +76,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  will-change: transform, opacity;
 }
 
 .sidebar--collapsed {
@@ -90,6 +91,10 @@
 .sidebar--collapsed .sidebar__actions {
   margin-top: 42px;
   align-items: center;
+}
+
+.sidebar--collapsed .sidebar__content {
+  pointer-events: none;
 }
 
 .sidebar__search {

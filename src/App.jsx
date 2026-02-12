@@ -571,8 +571,9 @@ export default function App() {
 
     gsap.to(appRef.current, {
       '--sidebar-width': `${targetWidth}px`,
-      duration: 0.32,
-      ease: 'power2.out',
+      duration: 0.46,
+      ease: 'power3.inOut',
+      overwrite: 'auto',
     })
   }, [sidebarOpen, isMobileViewport])
 
@@ -580,10 +581,8 @@ export default function App() {
     return <LoginPage />
   }
 
-  const sidebarWidth = sidebarOpen ? (isMobileViewport ? 280 : 320) : 56
-
   return (
-    <div className="app" ref={appRef} style={{ '--sidebar-width': `${sidebarWidth}px` }}>
+    <div className="app" ref={appRef}>
       {showEditor && (
         <EditorModal
           editorId={editorId}

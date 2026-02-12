@@ -32,23 +32,12 @@ const Sidebar = forwardRef(function Sidebar({
 
     gsap.killTweensOf(content)
 
-    if (sidebarOpen) {
-      gsap.set(content, { display: 'block' })
-      gsap.to(content, {
-        autoAlpha: 1,
-        x: 0,
-        duration: 0.24,
-        ease: 'power2.out',
-      })
-      return
-    }
-
     gsap.to(content, {
-      autoAlpha: 0,
-      x: -14,
-      duration: 0.18,
-      ease: 'power2.out',
-      onComplete: () => gsap.set(content, { display: 'none' }),
+      autoAlpha: sidebarOpen ? 1 : 0,
+      x: sidebarOpen ? 0 : -12,
+      duration: sidebarOpen ? 0.34 : 0.26,
+      ease: 'power3.out',
+      overwrite: 'auto',
     })
   }, [sidebarOpen])
 
@@ -61,17 +50,18 @@ const Sidebar = forwardRef(function Sidebar({
     gsap.fromTo(
       buttons,
       {
-        x: sidebarOpen ? -10 : 0,
-        y: sidebarOpen ? 0 : -8,
-        opacity: 0.75,
+        x: sidebarOpen ? -8 : 0,
+        y: sidebarOpen ? 0 : -6,
+        opacity: 0.78,
       },
       {
         x: 0,
         y: 0,
         opacity: 1,
-        duration: 0.22,
-        ease: 'power2.out',
-        stagger: 0.03,
+        duration: 0.3,
+        ease: 'power3.out',
+        stagger: 0.025,
+        overwrite: 'auto',
       },
     )
   }, [sidebarOpen])
