@@ -60,6 +60,7 @@ export default function App() {
   })
   const appRef = useRef(null)
   const searchRef = useRef(null)
+  const isMobileRef = useRef(typeof window !== 'undefined' ? window.innerWidth <= 900 : false)
 
   useEffect(() => onAuthStateChanged(auth, (nextUser) => {
     setUser(nextUser)
@@ -69,6 +70,21 @@ export default function App() {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('dock.theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    const syncSidebarForViewport = () => {
+      const isMobile = window.innerWidth <= 900
+      if (isMobile !== isMobileRef.current) {
+        isMobileRef.current = isMobile
+        setSidebarOpen(!isMobile)
+      }
+    }
+
+    // Handles device-emulation viewport settling after initial JS load.
+    requestAnimationFrame(syncSidebarForViewport)
+    window.addEventListener('resize', syncSidebarForViewport)
+    return () => window.removeEventListener('resize', syncSidebarForViewport)
+  }, [])
 
   useEffect(() => {
     if (!user) {
