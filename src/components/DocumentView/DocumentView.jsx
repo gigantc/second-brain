@@ -9,6 +9,7 @@ export default function DocumentView({
   briefGreeting,
   user,
   onSave,
+  onDiscardNew,
   onDelete,
   autoStartEdit = false,
 }) {

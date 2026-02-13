@@ -377,6 +377,15 @@ export default function App() {
     await updateListItems(listId, nextItems)
   }
 
+
+  const handleDiscardNewDocInline = async (docItem) => {
+    if (!docItem?.id) return
+    await deleteDoc(doc(db, 'notes', docItem.id))
+    if (autoEditDocId === docItem.id) setAutoEditDocId(null)
+    setActivePath(null)
+    setActiveListId(null)
+  }
+
   const handleDeleteList = async () => {
     if (!activeListId || !activeList) return
     await deleteDoc(doc(db, 'lists', activeListId))
@@ -627,6 +636,7 @@ export default function App() {
         user={user}
         autoEditDocId={autoEditDocId}
         onSaveDoc={handleUpdateNoteInline}
+        onDiscardNewDoc={handleDiscardNewDocInline}
         onDeleteDoc={(docItem) => openConfirmDialog({
           title: docItem?.isBrief ? 'Delete brief?' : 'Delete note?',
           body: <>Delete <strong>{docItem?.title || 'Untitled'}</strong>? This cannot be undone.</>,
