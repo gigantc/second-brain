@@ -24,6 +24,7 @@ import { createId, sortDocs } from './utils/helpers'
 import EditorModal from './components/EditorModal/EditorModal'
 import NewListModal from './components/NewListModal/NewListModal'
 import ConfirmDialog from './components/ConfirmDialog/ConfirmDialog'
+import ShortcutsModal from './components/ShortcutsModal/ShortcutsModal'
 import AppHeader from './components/AppHeader/AppHeader'
 import Rightbar from './components/Rightbar/Rightbar'
 import Sidebar from './components/Sidebar/Sidebar'
@@ -38,6 +39,7 @@ export default function App() {
   const docs = useMemo(() => sortDocs(firestoreDocs), [firestoreDocs])
   const [query, setQuery] = useState('')
   const [activePath, setActivePath] = useState(docs[0]?.path)
+  const [showShortcuts, setShowShortcuts] = useState(false)
   const [openSections, setOpenSections] = useState({ notes: true, lists: true, journal: true, briefs: true })
   const [user, setUser] = useState(null)
   const [showEditor, setShowEditor] = useState(false)
@@ -511,6 +513,43 @@ export default function App() {
     }
   }, [filtered, activePath, activeListId])
 
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === '/') {
+        event.preventDefault()
+        requestAnimationFrame(() => searchRef.current?.focus())
+        return
+      }
+
+      if (!filtered.length || activeListId) return
+
+      const currentIndex = filtered.findIndex((doc) => doc.path === activePath)
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        const nextIndex = Math.min(currentIndex + 1, filtered.length - 1)
+        setActivePath(filtered[nextIndex].path)
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        const prevIndex = Math.max(currentIndex - 1, 0)
+        setActivePath(filtered[prevIndex].path)
+      }
+      if (event.key === 'Escape') {
+        if (showShortcuts) {
+          setShowShortcuts(false)
+        } else {
+          searchRef.current?.blur()
+        }
+      }
+
+      if (event.key === '?') {
+        setShowShortcuts((prev) => !prev)
+      }
+    }
+
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [filtered, activePath, showShortcuts, activeListId])
 
   const grouped = useMemo(() => {
     const excludedNoteTitles = new Set(['Brief Archive', 'The Dock Docs'])
@@ -580,6 +619,9 @@ export default function App() {
         onConfirm={handleConfirmAction}
       />
 
+      {showShortcuts && (
+        <ShortcutsModal onClose={() => setShowShortcuts(false)} />
+      )}
 
       <AppHeader
         user={user}
