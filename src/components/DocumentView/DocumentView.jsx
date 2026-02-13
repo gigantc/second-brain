@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { Bold, Eye, EyeOff, Heading1, Heading2, List, ListChecks, ListOrdered, Link as LinkIcon, Pencil, Save, Trash2, X } from 'lucide-react'
+import { Bold, Heading1, Heading2, List, ListChecks, ListOrdered, Link as LinkIcon, Pencil, Save, Trash2, X } from 'lucide-react'
 import { markdownToInitialHtml, richTextExtensions } from '../../utils/richText'
 import './DocumentView.scss'
 
@@ -15,7 +15,6 @@ export default function DocumentView({
   const [isEditing, setIsEditing] = useState(false)
   const [titleDraft, setTitleDraft] = useState('')
   const [tagsDraft, setTagsDraft] = useState('')
-  const [showPreview, setShowPreview] = useState(true)
 
   const initialContent = useMemo(() => {
     if (activeDoc.contentJson) return activeDoc.contentJson
@@ -33,7 +32,6 @@ export default function DocumentView({
     setIsEditing(false)
     setTitleDraft(activeDoc.title || '')
     setTagsDraft((activeDoc.rawTags || activeDoc.tags || []).join(', '))
-    setShowPreview(typeof window !== 'undefined' ? window.innerWidth > 900 : true)
 
     if (editor) {
       editor.setEditable(false)
@@ -99,7 +97,6 @@ export default function DocumentView({
               <>
                 {tool('Save note', saveNote, false, <Save aria-hidden="true" size={16} />)}
                 {tool('Cancel edit', cancelEdit, false, <X aria-hidden="true" size={16} />)}
-                {tool('Toggle preview', () => setShowPreview((p) => !p), !showPreview, showPreview ? <EyeOff aria-hidden="true" size={16} /> : <Eye aria-hidden="true" size={16} />)}
               </>
             )}
             {tool(activeDoc.isBrief ? 'Delete brief' : 'Delete note', () => onDelete(activeDoc), false, <Trash2 aria-hidden="true" size={16} />)}
@@ -135,9 +132,6 @@ export default function DocumentView({
         <EditorContent editor={editor} />
       </div>
 
-      {isEditing && showPreview && editor && (
-        <div className="doc__preview" dangerouslySetInnerHTML={{ __html: editor.getHTML() }} />
-      )}
     </article>
   )
 }
