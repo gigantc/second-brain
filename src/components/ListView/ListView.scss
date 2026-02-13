@@ -194,7 +194,39 @@
   opacity: 0.4;
 }
 
-.list-item.is-complete .list-item__delete {
+.list-item.is-complete 
+.list-item__edit-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list-item__edit-input {
+  flex: 1;
+  min-width: 120px;
+  @include m.input-field;
+  padding: 8px 10px;
+}
+
+.list-item__action {
+  background: none;
+  border: none;
+  color: v.$muted;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include m.state-layer;
+
+  &:hover {
+    color: v.$white;
+  }
+}
+
+.list-item__delete {
   opacity: 0.5;
 }
 
@@ -248,6 +280,38 @@
 .list-item__text {
   flex: 1;
   font-size: v.$fs-base;
+}
+
+
+.list-item__edit-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list-item__edit-input {
+  flex: 1;
+  min-width: 120px;
+  @include m.input-field;
+  padding: 8px 10px;
+}
+
+.list-item__action {
+  background: none;
+  border: none;
+  color: v.$muted;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include m.state-layer;
+
+  &:hover {
+    color: v.$white;
+  }
 }
 
 .list-item__delete {

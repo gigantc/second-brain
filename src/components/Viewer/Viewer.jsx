@@ -13,6 +13,7 @@ export default function Viewer({
   onAddListItem,
   onToggleListItem,
   onDeleteListItem,
+  onEditListItem,
   onDeleteList,
   onRenameList,
   onDragEnd,
@@ -26,6 +27,7 @@ export default function Viewer({
           onAddItem={onAddListItem}
           onToggleItem={onToggleListItem}
           onDeleteItem={onDeleteListItem}
+          onEditItem={onEditListItem}
           onDeleteList={onDeleteList}
           onRenameList={onRenameList}
           onDragEnd={onDragEnd}

@@ -352,6 +352,17 @@ export default function App() {
   }
 
 
+  const handleEditListItem = async (listId, itemId, nextText) => {
+    const list = firestoreLists.find((item) => item.id === listId)
+    if (!list) return
+    const trimmed = nextText.trim()
+    if (!trimmed) return
+    const nextItems = (list.items || []).map((item) => (
+      item.id === itemId ? { ...item, text: trimmed } : item
+    ))
+    await updateListItems(listId, nextItems)
+  }
+
   const handleDeleteListItem = async (listId, itemId) => {
     const list = firestoreLists.find((item) => item.id === listId)
     if (!list) return
@@ -632,6 +643,7 @@ export default function App() {
         onAddListItem={handleAddListItem}
         onToggleListItem={handleToggleListItem}
         onDeleteListItem={handleDeleteListItem}
+        onEditListItem={handleEditListItem}
         onDeleteList={() => openConfirmDialog({
           title: 'Delete list?',
           body: <>Delete <strong>{activeList?.title}</strong>? This cannot be undone.</>,
