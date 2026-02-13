@@ -99,9 +99,18 @@
 }
 
 .doc__editor-meta {
-  margin-top: 14px;
+  margin-top: 10px;
   display: grid;
   gap: 8px;
+}
+
+.doc__editor-meta.is-sticky {
+  position: sticky;
+  top: 72px;
+  z-index: 4;
+  padding: 8px 0 10px;
+  background: linear-gradient(180deg, rgba(14, 17, 23, 0.96), rgba(14, 17, 23, 0.86));
+  backdrop-filter: blur(4px);
 }
 
 .doc__label {
@@ -196,8 +205,7 @@
 
 @media (max-width: 900px) {
   .doc__toolbar {
-    position: sticky;
-    top: 0;
+    position: static;
     z-index: 2;
     padding: 6px 0 8px;
     background: linear-gradient(180deg, rgba(14, 17, 23, 0.96), rgba(14, 17, 23, 0.88));
@@ -211,6 +219,10 @@
 
   .doc__content.is-editing .tiptap {
     min-height: 220px;
+  }
+
+  .doc__editor-meta.is-sticky {
+    top: 62px;
   }
 
   .doc__preview {

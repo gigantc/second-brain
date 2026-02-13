@@ -115,7 +115,7 @@ export default function DocumentView({
       </header>
 
       {isEditing && editable && (
-        <div className="doc__editor-meta">
+        <div className="doc__editor-meta is-sticky">
           <label className="doc__label">Tags</label>
           <input className="doc__input" type="text" value={tagsDraft} onChange={(event) => setTagsDraft(event.target.value)} placeholder="work, ideas" />
 
