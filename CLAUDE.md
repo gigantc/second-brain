@@ -43,26 +43,54 @@ When Firestore data exists for a content type, it takes precedence and local fil
 
 ### Key files
 
-- `src/App.jsx` - Monolithic main component (~1600 lines). All state (30+ useState hooks), rendering, event handlers, modals, search, keyboard navigation live here. No component extraction except `SortableListItem`.
+- `src/App.jsx` - Main component (~690 lines). State management, Firestore subscriptions, event handlers, search, and keyboard navigation. Delegates rendering to extracted components.
 - `src/firebase.js` - Firebase init and re-exports of auth/firestore SDK methods. All Firestore imports come through here.
-- `src/App.scss` - Modal shared styles + CSS Grid layout: 3-column (280px sidebar, 1fr main, 280px rightbar).
+- `src/App.scss` - CSS Grid layout: 3-column (280px sidebar, 1fr main, 280px rightbar).
 - `src/styles/_variables.scss` - All design tokens (colors, typography, radii, shadows, transitions).
 - `src/styles/_mixins.scss` - Reusable mixins: `surface-tint`, `state-layer`, `input-field`, `focus-ring`, `button-reset`.
 - `src/styles/_base.scss` - Reset, body defaults, `.tag` and `.highlight` base classes.
+- `src/utils/richText.js` - Shared TipTap extension config and markdown-to-HTML/rich-doc-to-HTML conversion.
 - `scripts/docky-cli.js` - Node CLI for Firestore CRUD. Authenticates with `DOCKY_EMAIL`/`DOCKY_PASSWORD` env vars.
+
+### Component structure
+
+- `AppHeader/` - Top header bar
+- `Sidebar/` - Left sidebar with collapsible rail (42px collapsed on mobile), drawer overlay
+- `Viewer/` - Main content area wrapping DocumentView and ListView
+- `DocumentView/` - Inline rich-text editing and reading for notes/journals/briefs (TipTap)
+- `ListView/` - Checklist view with inline item editing, drag-and-drop reorder
+- `ListView/SortableListItem` - Individual draggable list item
+- `Rightbar/` - Right sidebar with sub-components: Outline, Metadata, Related, Backlinks, BriefCompare, ListStats
+- `DocList/` - Document list rendering (DocListSection, DocListItem)
+- `SearchBar/` - Search input
+- `NewListModal/` - Modal for creating new lists
+- `ConfirmDialog/` - Themed confirmation dialog (replaces browser alerts)
+- `Auth/` and `LoginPage/` - Authentication UI
 
 ### Firestore schema
 
 Notes collection documents: `{ title, content, tags[], type, createdAt, updatedAt }`
 Lists collection documents: `{ title, items[{ id, text, completed, createdAt }], createdAt, updatedAt }`
 
+### Editing model
+
+Notes and journals use **inline rich-text editing** powered by TipTap (no modal editor). The flow:
+- New notes/journals auto-open in edit mode with TipTap editor
+- Editor toolbar (bold, italic, underline, headings, lists, links, task lists) pins beneath the sticky document header
+- Title edits inline in the document header
+- New unsaved content is tracked as a **draft** — canceling triggers a themed confirm dialog
+- Auto-edit mode exits after first save
+- List items also support inline editing
+
 ### Patterns
 
 - Custom front-matter parser (no gray-matter library) - supports `title`, `created`, `tags` fields
 - Markdown rendered with `marked.parse()`, custom renderer extracts H2/H3 for outline navigation
+- Rich-text content stored as TipTap JSON doc, converted to HTML via `richDocToHtml()` for display
 - Intersection Observer syncs active heading in right sidebar outline
 - GSAP animations for list item completion (promise-based, awaited before Firestore update)
-- Keyboard shortcuts: `/` search, arrow keys navigate, `Esc` close, `?` help
+- Themed tooltips with 1s delay on icon controls
+- Keyboard shortcuts: `/` search, arrow keys navigate, `Esc` close
 
 ## Styling Guide (M3 Dark Theme)
 
@@ -178,4 +206,4 @@ Copy `.env.example` to `.env` with Firebase config. CLI also needs `DOCKY_EMAIL`
 
 ## Tech stack
 
-React 19, Vite 7, Sass, Firebase (Auth + Firestore), marked, gsap, @dnd-kit. JavaScript only (no TypeScript). No test framework.
+React 19, Vite 7, Sass, Firebase (Auth + Firestore), TipTap (rich-text editor), marked, gsap, @dnd-kit, lucide-react. JavaScript only (no TypeScript). No test framework.

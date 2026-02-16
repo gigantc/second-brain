@@ -45,20 +45,7 @@
 }
 
 .login-card__button {
-  padding: 10px 24px;
-  border-radius: v.$radius-pill;
-  border: none;
-  cursor: pointer;
-  background: var(--accent);
-  color: v.$white;
-  font-size: v.$fs-sm;
-  font-weight: v.$fw-bold;
-  @include m.state-layer;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  @include m.button-filled;
 }
 
 .login-card__button--ghost {

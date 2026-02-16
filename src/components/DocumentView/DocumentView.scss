@@ -208,15 +208,6 @@
   background: rgba(v.$white, 0.02);
 }
 
-.doc__preview {
-  margin-top: 12px;
-  border: 1px solid rgba(v.$white, 0.08);
-  border-radius: v.$radius-m;
-  background: rgba(v.$white, 0.02);
-  padding: 14px;
-}
-
-
 @media (max-width: 900px) {
   .doc {
     max-width: 100%;
@@ -244,10 +235,6 @@
 
   .doc__editor-meta.is-sticky {
     top: 62px;
-  }
-
-  .doc__preview {
-    margin-top: 10px;
   }
 }
 

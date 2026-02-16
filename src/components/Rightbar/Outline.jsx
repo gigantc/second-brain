@@ -33,9 +33,9 @@ export default function Outline({ outline, activeDoc }) {
     <div className="rightbar__section">
       <div className="rightbar__title">Outline</div>
       {outline.length ? (
-        outline.map((item, index) => (
+        outline.map((item) => (
           <button
-            key={`${item.text}-${index}`}
+            key={item.id}
             className={`rightbar__outline rightbar__item--indent-${item.level} ${
               activeHeadingId === item.id ? 'is-active' : ''
             }`}
