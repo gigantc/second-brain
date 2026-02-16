@@ -12,3 +12,11 @@
 .empty {
   color: v.$muted;
 }
+
+
+@media (max-width: 900px) {
+  .viewer {
+    padding: 15px;
+    overflow: auto;
+  }
+}
