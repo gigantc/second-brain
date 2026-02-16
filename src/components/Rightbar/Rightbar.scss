@@ -49,7 +49,8 @@
   margin-bottom: 10px;
 }
 
-.rightbar__link {
+.rightbar__link,
+.rightbar__outline {
   display: block;
   width: 100%;
   text-align: left;
@@ -64,15 +65,18 @@
   outline: none;
   font-weight: v.$fw-medium;
   @include m.state-layer;
+  @include m.focus-ring;
 
   &:hover {
     background: rgba(v.$white, 0.04);
   }
+}
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-soft);
+.rightbar__outline {
+  padding: 4px 6px;
+
+  &.is-active {
+    background: rgba(var(--accent-light-rgb), 0.14);
   }
 }
 
@@ -86,35 +90,4 @@
 .rightbar__snippet strong {
   color: v.$white;
   font-weight: v.$fw-semi;
-}
-
-.rightbar__outline {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 4px 6px;
-  margin-bottom: 4px;
-  background: none;
-  border: none;
-  border-radius: v.$radius-s;
-  color: v.$white;
-  cursor: pointer;
-  transition: v.$transition-fast;
-  outline: none;
-  font-weight: v.$fw-medium;
-  @include m.state-layer;
-
-  &:hover {
-    background: rgba(v.$white, 0.04);
-  }
-
-  &.is-active {
-    background: rgba(var(--accent-light-rgb), 0.14);
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-soft);
-  }
 }

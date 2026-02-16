@@ -40,11 +40,7 @@
     filter: brightness(1.05);
   }
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-soft);
-  }
+  @include m.focus-ring;
 }
 
 .doc-list__chevron {
@@ -79,8 +75,8 @@
   -webkit-appearance: none;
   @include m.state-layer;
 
-  &:focus,
-  &:focus-visible,
+  @include m.focus-ring;
+
   &:active {
     outline: none;
     box-shadow: var(--ring-soft);

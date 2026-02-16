@@ -61,6 +61,25 @@
   }
 }
 
+// M3 filled button
+@mixin button-filled {
+  padding: 10px 24px;
+  border-radius: v.$radius-pill;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: v.$white;
+  font-size: v.$fs-base;
+  font-weight: v.$fw-bold;
+  box-shadow: v.$elevation-1;
+  @include state-layer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 // M3 filled input style
 @mixin input-field {
   width: 100%;

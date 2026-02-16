@@ -61,11 +61,7 @@
   cursor: pointer;
   @include m.state-layer;
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-soft);
-  }
+  @include m.focus-ring;
 }
 
 // M3 text button (cancel)
@@ -110,23 +106,8 @@
   @include m.input-field;
 }
 
-// M3 filled button (Add)
 .list__add-button {
-  padding: 10px 24px;
-  border-radius: v.$radius-pill;
-  border: none;
-  cursor: pointer;
-  background: var(--accent);
-  color: v.$white;
-  font-size: v.$fs-base;
-  font-weight: v.$fw-bold;
-  box-shadow: v.$elevation-1;
-  @include m.state-layer;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  @include m.button-filled;
 }
 
 .list__items {
@@ -194,7 +175,6 @@
   opacity: 0.4;
 }
 
-.list-item.is-complete 
 .list-item__edit-wrap {
   flex: 1;
   display: flex;
@@ -227,15 +207,18 @@
 }
 
 .list-item__delete {
+  @extend .list-item__action;
   opacity: 0.5;
 }
 
-.list-item.is-completing .list-item__checkbox {
+.list-item.is-completing .list-item__checkbox,
+.list-item.is-complete .list-item__checkbox {
   background: var(--accent);
   border-color: rgba(var(--accent-rgb), 0.6);
 }
 
-.list-item.is-completing .list-item__check {
+.list-item.is-completing .list-item__check,
+.list-item.is-complete .list-item__check {
   transform: rotate(45deg) scale(1);
 }
 
@@ -251,11 +234,7 @@
   cursor: pointer;
   transition: v.$transition-fast;
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-soft);
-  }
+  @include m.focus-ring;
 }
 
 .list-item__check {
@@ -268,65 +247,9 @@
   transition: transform v.$transition-fast;
 }
 
-.list-item.is-complete .list-item__checkbox {
-  background: var(--accent);
-  border-color: rgba(var(--accent-rgb), 0.6);
-}
-
-.list-item.is-complete .list-item__check {
-  transform: rotate(45deg) scale(1);
-}
-
 .list-item__text {
   flex: 1;
   font-size: v.$fs-base;
-}
-
-
-.list-item__edit-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.list-item__edit-input {
-  flex: 1;
-  min-width: 120px;
-  @include m.input-field;
-  padding: 8px 10px;
-}
-
-.list-item__action {
-  background: none;
-  border: none;
-  color: v.$muted;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  @include m.state-layer;
-
-  &:hover {
-    color: v.$white;
-  }
-}
-
-.list-item__delete {
-  background: none;
-  border: none;
-  color: v.$muted;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 8px;
-  @include m.state-layer;
-
-  &:hover {
-    color: v.$white;
-  }
 }
 
 .list-item--empty {

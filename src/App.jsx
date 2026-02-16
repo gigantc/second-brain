@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { arrayMove } from '@dnd-kit/sortable'
 import './App.scss'
@@ -167,46 +167,38 @@ export default function App() {
   }, [user])
 
   useEffect(() => {
-    if (activeListId && !firestoreLists.find((list) => list.id === activeListId)) {
+    if (!activeListId) {
+      setConfirmDialog(null)
+    } else if (!firestoreLists.find((list) => list.id === activeListId)) {
       setActiveListId(null)
     }
   }, [activeListId, firestoreLists])
 
-  useEffect(() => {
-    if (!activeListId) {
-      setConfirmDialog(null)
-    }
-  }, [activeListId])
 
-  useEffect(() => {
-    if (!docs.length || activeListId) return
-    if (!docs.find((doc) => doc.path === activePath)) {
-      setActivePath(docs[0]?.path)
-    }
-  }, [docs, activePath, activeListId])
-
-
-  const handleCreateNote = async () => {
+  const createDocument = async (type, { title, tags = [] } = {}) => {
     if (!user) return
+    const docTitle = title || 'Untitled'
     const docRef = await addDoc(collection(db, 'notes'), {
-      title: 'Untitled',
+      title: docTitle,
       content: '',
-      contentJson: {
-        type: 'doc',
-        content: [
-          { type: 'paragraph' },
-        ],
-      },
-      tags: [],
-      type: 'note',
+      contentJson: { type: 'doc', content: [{ type: 'paragraph' }] },
+      tags,
+      type,
       isDraft: true,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     })
     setAutoEditDocId(docRef.id)
-    setActivePath(`firestore:note/${docRef.id}`)
+    setActivePath(`firestore:${type}/${docRef.id}`)
     setActiveListId(null)
     if (isMobileViewport) setSidebarOpen(false)
+  }
+
+  const handleCreateNote = () => createDocument('note')
+
+  const handleCreateJournal = () => {
+    const today = new Date().toISOString().slice(0, 10)
+    return createDocument('journal', { title: `Daily Journal — ${today}`, tags: ['journal'] })
   }
 
   const handleUpdateNoteInline = async (docItem, { title, content, contentJson, tags }) => {
@@ -225,40 +217,6 @@ export default function App() {
   }
 
   const handleDeleteNoteInline = async (docItem) => {
-    if (!docItem?.id) return
-    await deleteDoc(doc(db, 'notes', docItem.id))
-    setActivePath(null)
-    setActiveListId(null)
-  }
-
-
-  const handleCreateJournal = async () => {
-    if (!user) return
-    const today = new Date().toISOString().slice(0, 10)
-    const title = `Daily Journal — ${today}`
-    const docRef = await addDoc(collection(db, 'notes'), {
-      title,
-      content: '',
-      contentJson: {
-        type: 'doc',
-        content: [
-          { type: 'paragraph' },
-        ],
-      },
-      tags: ['journal'],
-      type: 'journal',
-      isDraft: true,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    })
-    setAutoEditDocId(docRef.id)
-    setActivePath(`firestore:journal/${docRef.id}`)
-    setActiveListId(null)
-    if (isMobileViewport) setSidebarOpen(false)
-  }
-
-  const handleDeleteBrief = async (docItem) => {
-
     if (!docItem?.id) return
     await deleteDoc(doc(db, 'notes', docItem.id))
     setActivePath(null)
@@ -456,10 +414,14 @@ export default function App() {
     })
   }, [firestoreLists, query])
 
-  const activeDoc = activeListId
-    ? null
-    : filtered.find((doc) => doc.path === activePath) || filtered[0]
-  const activeList = firestoreLists.find((list) => list.id === activeListId) || null
+  const activeDoc = useMemo(
+    () => (activeListId ? null : filtered.find((doc) => doc.path === activePath) || filtered[0]),
+    [activeListId, filtered, activePath],
+  )
+  const activeList = useMemo(
+    () => firestoreLists.find((list) => list.id === activeListId) || null,
+    [firestoreLists, activeListId],
+  )
 
   const listStats = useMemo(() => {
     if (!activeList) return null
@@ -579,6 +541,33 @@ export default function App() {
     })
   }, [sidebarOpen, isMobileViewport])
 
+  const handleSelectDoc = useCallback((path) => {
+    setAutoEditDocId(null)
+    setActivePath(path)
+    setActiveListId(null)
+    if (isMobileViewport) setSidebarOpen(false)
+  }, [isMobileViewport])
+
+  const handleSelectList = useCallback((id) => {
+    setAutoEditDocId(null)
+    setActiveListId(id)
+    setActivePath(null)
+    if (isMobileViewport) setSidebarOpen(false)
+  }, [isMobileViewport])
+
+  const handleNavigate = useCallback((path) => {
+    setActivePath(path)
+    setActiveListId(null)
+  }, [])
+
+  const handleToggleSection = useCallback((key) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }))
+  }, [])
+
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarOpen((prev) => !prev)
+  }, [])
+
   if (!user) {
     return <LoginPage />
   }
@@ -605,7 +594,6 @@ export default function App() {
 
       <AppHeader
         user={user}
-        autoEditDocId={autoEditDocId}
         theme={theme}
         onThemeChange={setTheme}
         version={APP_VERSION}
@@ -620,26 +608,16 @@ export default function App() {
         grouped={grouped}
         filteredLists={filteredLists}
         openSections={openSections}
-        onToggleSection={(key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }))}
+        onToggleSection={handleToggleSection}
         activeDoc={activeDoc}
         activeListId={activeListId}
         sidebarOpen={sidebarOpen}
-        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        onToggleSidebar={handleToggleSidebar}
         onNewNote={handleCreateNote}
         onNewList={() => setShowListModal(true)}
         onNewJournal={handleCreateJournal}
-        onSelectDoc={(path) => {
-          setAutoEditDocId(null)
-          setActivePath(path)
-          setActiveListId(null)
-          if (isMobileViewport) setSidebarOpen(false)
-        }}
-        onSelectList={(id) => {
-          setAutoEditDocId(null)
-          setActiveListId(id)
-          setActivePath(null)
-          if (isMobileViewport) setSidebarOpen(false)
-        }}
+        onSelectDoc={handleSelectDoc}
+        onSelectList={handleSelectList}
       />
 
       <Viewer
@@ -656,7 +634,7 @@ export default function App() {
           title: docItem?.isBrief ? 'Delete brief?' : 'Delete note?',
           body: <>Delete <strong>{docItem?.title || 'Untitled'}</strong>? This cannot be undone.</>,
           confirmLabel: docItem?.isBrief ? 'Delete Brief' : 'Delete Note',
-          onConfirm: () => (docItem?.isBrief ? handleDeleteBrief(docItem) : handleDeleteNoteInline(docItem)),
+          onConfirm: () => handleDeleteNoteInline(docItem),
         })}
         onAddListItem={handleAddListItem}
         onToggleListItem={handleToggleListItem}
@@ -681,10 +659,7 @@ export default function App() {
         relatedDocs={relatedDocs}
         backlinks={backlinks}
         snippetMap={snippetMap}
-        onNavigate={(path) => {
-          setActivePath(path)
-          setActiveListId(null)
-        }}
+        onNavigate={handleNavigate}
       />
     </div>
   )
