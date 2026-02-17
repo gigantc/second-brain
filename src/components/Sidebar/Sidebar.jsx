@@ -33,13 +33,18 @@ const Sidebar = forwardRef(function Sidebar({
 
     gsap.killTweensOf(content)
 
-    gsap.to(content, {
-      autoAlpha: sidebarOpen ? 1 : 0,
-      x: sidebarOpen ? 0 : -12,
-      duration: sidebarOpen ? 0.34 : 0.26,
-      ease: 'power3.out',
-      overwrite: 'auto',
-    })
+    if (sidebarOpen) {
+      // Opening: delay content fade-in until sidebar has started expanding
+      gsap.fromTo(content,
+        { autoAlpha: 0, x: -8 },
+        { autoAlpha: 1, x: 0, duration: 0.25, delay: 0.1, ease: 'power2.out', overwrite: 'auto' },
+      )
+    } else {
+      // Closing: fade content out quickly before sidebar collapses
+      gsap.to(content, {
+        autoAlpha: 0, x: -8, duration: 0.15, ease: 'power2.in', overwrite: 'auto',
+      })
+    }
   }, [sidebarOpen])
 
   useLayoutEffect(() => {
@@ -48,23 +53,16 @@ const Sidebar = forwardRef(function Sidebar({
     const buttons = actions.querySelectorAll('.sidebar__action-btn')
 
     gsap.killTweensOf(buttons)
-    gsap.fromTo(
-      buttons,
-      {
-        x: sidebarOpen ? -8 : 0,
-        y: sidebarOpen ? 0 : -6,
-        opacity: 0.78,
-      },
-      {
-        x: 0,
-        y: 0,
-        opacity: 1,
-        duration: 0.3,
-        ease: 'power3.out',
-        stagger: 0.025,
-        overwrite: 'auto',
-      },
-    )
+
+    if (sidebarOpen) {
+      gsap.fromTo(buttons,
+        { scale: 0.92, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.2, delay: 0.12, ease: 'power2.out', stagger: 0.03, overwrite: 'auto' },
+      )
+    } else {
+      // Buttons stay visible in collapsed state (stacked vertically) — just reset to full opacity
+      gsap.set(buttons, { scale: 1, opacity: 1, overwrite: 'auto' })
+    }
   }, [sidebarOpen])
 
   return (

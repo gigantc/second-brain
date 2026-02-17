@@ -535,8 +535,8 @@ export default function App() {
 
     gsap.to(appRef.current, {
       '--sidebar-width': `${targetWidth}px`,
-      duration: 0.46,
-      ease: 'power3.inOut',
+      duration: 0.3,
+      ease: 'power2.inOut',
       overwrite: 'auto',
     })
   }, [sidebarOpen, isMobileViewport])
