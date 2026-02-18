@@ -2,6 +2,22 @@
 @use './styles/mixins' as m;
 @use './styles/base';
 
+.app-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: v.$black;
+  color: v.$green-light;
+  animation: loader-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes loader-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
 .modal__backdrop {
   position: fixed;
   inset: 0;
