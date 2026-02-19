@@ -16,7 +16,7 @@
   top: 0;
   z-index: 5;
   padding: 36px 44px 18px;
-  background: linear-gradient(180deg, rgba(14, 17, 23, 0.97), rgba(14, 17, 23, 0.88));
+  background: linear-gradient(180deg, rgba(v.$black, 0.97), rgba(v.$black, 0.88));
   backdrop-filter: blur(4px);
 }
 
@@ -30,24 +30,12 @@
 
 
 .doc__title-input {
-  width: 100%;
+  @include m.input-underline;
   max-width: 100%;
-  padding: 0 0 5px 0;
   margin: 0 0 10px;
-  border: none;
-  border-bottom: 2px solid rgba(v.$white, 0.15);
-  border-radius: 0;
-  background: none;
-  color: v.$white;
   font-size: var(--type-h1);
   font-weight: v.$fw-bold;
   line-height: 1.2;
-  outline: none;
-  transition: border-color v.$transition-normal;
-
-  &:focus {
-    border-bottom-color: var(--accent-light);
-  }
 }
 
 .doc__header h1 {
@@ -71,7 +59,7 @@
   font-size: var(--type-meta);
   color: var(--accent-light);
   border: 1px solid rgba(var(--accent-light-rgb), 0.3);
-  border-radius: 999px;
+  border-radius: v.$radius-pill;
   padding: 2px 8px;
   margin-bottom: 8px;
 }
@@ -90,21 +78,7 @@
 }
 
 .doc__icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  color: v.$white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  @include m.state-layer;
-
-  &:hover {
-    background: rgba(v.$white, 0.08);
-  }
+  @include m.icon-button;
 
   &.is-active {
     background: rgba(var(--accent-light-rgb), 0.18);
@@ -125,7 +99,7 @@
   top: 72px;
   z-index: 4;
   padding: 8px 0 10px;
-  background: linear-gradient(180deg, rgba(14, 17, 23, 0.96), rgba(14, 17, 23, 0.86));
+  background: linear-gradient(180deg, rgba(v.$black, 0.96), rgba(v.$black, 0.86));
   backdrop-filter: blur(4px);
 }
 
@@ -135,20 +109,7 @@
 }
 
 .doc__input {
-  width: 100%;
-  padding: 0 0 5px 0;
-  border: none;
-  border-bottom: 2px solid rgba(v.$white, 0.15);
-  border-radius: 0;
-  background: none;
-  color: v.$white;
-  font-size: v.$fs-base;
-  outline: none;
-  transition: border-color v.$transition-normal;
-
-  &:focus {
-    border-bottom-color: var(--accent-light);
-  }
+  @include m.input-underline;
 }
 
 .doc__toolbar {

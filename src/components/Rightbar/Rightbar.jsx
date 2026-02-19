@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Outline from './Outline'
 import Metadata from './Metadata'
 import BriefCompare from './BriefCompare'
@@ -6,7 +7,7 @@ import Backlinks from './Backlinks'
 import ListStats from './ListStats'
 import './Rightbar.scss'
 
-export default function Rightbar({
+export default memo(function Rightbar({
   activeList,
   activeDoc,
   listStats,
@@ -35,4 +36,4 @@ export default function Rightbar({
       </div>
     </aside>
   )
-}
+})

@@ -26,8 +26,10 @@ $ring-soft: 0 0 0 3px rgba($green-light, 0.3);
 // Typography
 $font-stack: "Roboto Flex", "Roboto", "Inter", system-ui, -apple-system, sans-serif;
 $fw-normal: 360;
+$fw-light: 380;
 $fw-medium: 420;
 $fw-semi: 520;
+$fw-semi-bold: 540;
 $fw-bold: 560;
 $fs-xs: 11px;
 $fs-sm: 12px;
@@ -39,3 +41,4 @@ $fs-xl: 28px;
 // Transitions
 $transition-fast: 0.15s ease;
 $transition-normal: 0.2s ease;
+$easing-standard: cubic-bezier(0.2, 0, 0, 1);

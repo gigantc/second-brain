@@ -1,3 +1,5 @@
+const MARKET_KEYS = ['S&P 500', 'Nasdaq', 'Dow', 'BTC', 'ETH']
+
 export default function BriefCompare({ briefCompare }) {
   if (!briefCompare) return null
 
@@ -21,7 +23,7 @@ export default function BriefCompare({ briefCompare }) {
       <div className="rightbar__item">
         Yesterday: {briefCompare.yesterday.created}
       </div>
-      {['S&P 500', 'Nasdaq', 'Dow', 'BTC', 'ETH'].map((key) => {
+      {MARKET_KEYS.map((key) => {
         const today = briefCompare.todayMarkets[key]
         const yesterday = briefCompare.yesterdayMarkets[key]
         const delta = (today?.value ?? null) !== null && (yesterday?.value ?? null) !== null

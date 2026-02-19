@@ -39,23 +39,8 @@
 
 .sidebar__action-btn,
 .sidebar__toggle {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  color: v.$white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  @include m.icon-button;
   flex: 0 0 34px;
-}
-
-.sidebar__action-btn:hover,
-.sidebar__toggle:hover {
-  background: rgba(v.$white, 0.08);
 }
 
 .sidebar__action-btn--primary {

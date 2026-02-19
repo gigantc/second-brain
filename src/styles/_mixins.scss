@@ -80,6 +80,39 @@
   }
 }
 
+// Minimal underline-only input (title fields, composers, search)
+@mixin input-underline {
+  width: 100%;
+  padding: 0 0 5px 0;
+  border: none;
+  border-bottom: 2px solid rgba(v.$white, 0.15);
+  border-radius: 0;
+  background: none;
+  color: v.$white;
+  font-size: v.$fs-base;
+  outline: none;
+  transition: border-color v.$transition-normal;
+
+  &:focus {
+    border-bottom-color: var(--accent-light);
+  }
+}
+
+// Square icon button (toolbars, panels)
+@mixin icon-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: v.$white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  @include state-layer;
+}
+
 // M3 filled input style
 @mixin input-field {
   width: 100%;

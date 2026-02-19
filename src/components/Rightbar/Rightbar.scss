@@ -67,9 +67,6 @@
   @include m.state-layer;
   @include m.focus-ring;
 
-  &:hover {
-    background: rgba(v.$white, 0.04);
-  }
 }
 
 .rightbar__outline {

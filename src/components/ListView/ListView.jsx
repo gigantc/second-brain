@@ -11,6 +11,7 @@ import {
 } from '@dnd-kit/sortable'
 import { Pencil, Plus, Save, Trash2, X } from 'lucide-react'
 import SortableListItem from './SortableListItem'
+import ListItemContent from './ListItemContent'
 import './ListView.scss'
 
 export default function ListView({
@@ -188,66 +189,17 @@ export default function ListView({
                 data-item-id={item.id}
                 className="list-item is-complete"
               >
-                <span className="list-item__swipe" aria-hidden="true" />
-                <button
-                  className="list-item__checkbox"
-                  type="button"
-                  onClick={() => onToggleItem(activeList.id, item.id)}
-                  aria-pressed={item.completed}
-                >
-                  <span className="list-item__check" />
-                </button>
-
-                {editingItemId === item.id ? (
-                  <div className="list-item__edit-wrap">
-                    <input
-                      className="list-item__edit-input"
-                      type="text"
-                      value={editingItemDraft}
-                      onChange={(event) => setEditingItemDraft(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                          event.preventDefault()
-                          saveEditItem(activeList.id, item.id)
-                        }
-                        if (event.key === 'Escape') {
-                          event.preventDefault()
-                          cancelEditItem()
-                        }
-                      }}
-                      autoFocus
-                    />
-                    <button className="list-item__action" type="button" onClick={() => saveEditItem(activeList.id, item.id)} aria-label="Save item" data-tooltip="Save">
-                      <Save aria-hidden="true" size={14} strokeWidth={2} />
-                    </button>
-                    <button className="list-item__action" type="button" onClick={cancelEditItem} aria-label="Cancel edit" data-tooltip="Cancel">
-                      <X aria-hidden="true" size={14} strokeWidth={2} />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <span className="list-item__text">{item.text}</span>
-                    <button
-                      className="list-item__action"
-                      type="button"
-                      onClick={() => beginEditItem(item)}
-                      aria-label="Edit item"
-                      data-tooltip="Edit item"
-                    >
-                      <Pencil aria-hidden="true" size={14} strokeWidth={2} />
-                    </button>
-                  </>
-                )}
-
-                <button
-                  className="list-item__delete"
-                  type="button"
-                  onClick={() => onDeleteItem(activeList.id, item.id)}
-                  aria-label="Delete item"
-                  data-tooltip="Delete item"
-                >
-                  <Trash2 aria-hidden="true" size={14} strokeWidth={2} />
-                </button>
+                <ListItemContent
+                  item={item}
+                  isEditing={editingItemId === item.id}
+                  editDraft={editingItemDraft}
+                  onStartEdit={() => beginEditItem(item)}
+                  onEditDraftChange={setEditingItemDraft}
+                  onSaveEdit={() => saveEditItem(activeList.id, item.id)}
+                  onCancelEdit={cancelEditItem}
+                  onToggle={() => onToggleItem(activeList.id, item.id)}
+                  onDelete={() => onDeleteItem(activeList.id, item.id)}
+                />
               </li>
             ))}
           </>

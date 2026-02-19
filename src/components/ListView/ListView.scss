@@ -16,7 +16,7 @@
   top: 0;
   z-index: 5;
   padding: 36px 44px 28px;
-  background: linear-gradient(180deg, rgba(14, 17, 23, 0.97), rgba(14, 17, 23, 0.88));
+  background: linear-gradient(180deg, rgba(v.$black, 0.97), rgba(v.$black, 0.88));
   backdrop-filter: blur(4px);
 }
 
@@ -34,23 +34,11 @@
 }
 
 .list__title-input {
-  width: 100%;
-  padding: 0 0 5px 0;
+  @include m.input-underline;
   margin: 0 0 6px;
-  border: none;
-  border-bottom: 2px solid rgba(v.$white, 0.15);
-  border-radius: 0;
-  background: none;
-  color: v.$white;
   font-size: var(--type-h1);
   font-weight: v.$fw-bold;
   letter-spacing: 0.01em;
-  outline: none;
-  transition: border-color v.$transition-normal;
-
-  &:focus {
-    border-bottom-color: var(--accent-light);
-  }
 }
 
 .list__panel {
@@ -61,21 +49,7 @@
 }
 
 .list__icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  color: v.$white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  @include m.state-layer;
-
-  &:hover {
-    background: rgba(v.$white, 0.08);
-  }
+  @include m.icon-button;
 }
 
 .list__meta {
@@ -91,20 +65,8 @@
 }
 
 .list__input {
+  @include m.input-underline;
   flex: 1;
-  padding: 0 0 5px 0;
-  border: none;
-  border-bottom: 2px solid rgba(v.$white, 0.15);
-  border-radius: 0;
-  background: none;
-  color: v.$white;
-  font-size: v.$fs-base;
-  outline: none;
-  transition: border-color v.$transition-normal;
-
-  &:focus {
-    border-bottom-color: var(--accent-light);
-  }
 }
 
 

@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { highlightText } from '../../utils/string.jsx'
 
-export default function DocListItem({ doc, isActive, query, onClick }) {
+export default memo(function DocListItem({ doc, isActive, query, onClick }) {
   return (
     <button
       className={`doc-list__item ${isActive ? 'is-active' : ''}`}
@@ -14,4 +15,4 @@ export default function DocListItem({ doc, isActive, query, onClick }) {
       </div>
     </button>
   )
-}
+})

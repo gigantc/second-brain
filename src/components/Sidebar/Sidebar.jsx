@@ -1,4 +1,4 @@
-import { forwardRef, useLayoutEffect, useRef } from 'react'
+import { forwardRef, memo, useLayoutEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { BookOpen, FilePlus2, ListTodo, PanelLeft, PanelLeftClose } from 'lucide-react'
 import SearchBar from '../SearchBar/SearchBar'
@@ -139,4 +139,4 @@ const Sidebar = forwardRef(function Sidebar({
   )
 })
 
-export default Sidebar
+export default memo(Sidebar)

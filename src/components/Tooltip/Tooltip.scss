@@ -3,14 +3,14 @@
 .tooltip-portal {
   position: fixed;
   z-index: 9999;
-  background: v.$green;
-  color: #fff;
+  background: var(--accent);
+  color: v.$white;
   font-size: v.$fs-sm;
   line-height: 1;
   white-space: nowrap;
   border-radius: 10px;
   padding: 8px 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 16px rgba(v.$black, 0.35);
   pointer-events: none;
   animation: tooltip-in 0.14s ease both;
 
@@ -22,7 +22,7 @@
     transform: translateX(-50%);
     width: 12px;
     height: 6px;
-    background: v.$green;
+    background: var(--accent);
   }
 
   // Arrow above tooltip (tooltip below trigger) — default

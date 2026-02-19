@@ -21,7 +21,7 @@
   letter-spacing: 0.14em;
   color: v.$white;
   padding: 8px 10px;
-  font-weight: 540;
+  font-weight: v.$fw-semi-bold;
   background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.9), rgba(var(--accent-rgb), 0.82));
   border-radius: v.$radius-m;
   box-shadow: v.$elevation-1;

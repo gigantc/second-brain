@@ -37,7 +37,7 @@
 .brand__subtitle {
   color: v.$muted;
   font-size: v.$fs-sm;
-  font-weight: 380;
+  font-weight: v.$fw-light;
 }
 
 @media (max-width: 900px) {
